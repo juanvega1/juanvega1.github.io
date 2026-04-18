@@ -45,7 +45,7 @@
     .btn-outline:active { background: #1a0808; }
     .btn-ghost { height: 38px; background: transparent; color: #666; border: 1px solid #222; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; padding: 0 12px; }
     .btn-ghost:active { background: #1a1a1a; }
-    .btn-full { width: 100%; height: 50px; background: #c0392b; color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; margin-top: 4px; }
+    .btn-full { width: 100%; height: 50px; background: #c0392b; color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; margin-top: 4px; margin-bottom: 16px; }
     .btn-full:active { background: #a93226; transform: scale(0.98); }
     .btn-full:disabled { opacity: 0.3; pointer-events: none; }
     .btn-gray-full { width: 100%; height: 44px; background: #1a1a1a; color: #888; border: 1px solid #222; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; margin-top: 8px; }
@@ -326,7 +326,8 @@ function renderGastos() {
   });
 }
 
-document.getElementById('btn-nuevo-gasto').addEventListener('click', function(){
+// Espacio aplicado via margin-top en renderGastos
+  document.getElementById('btn-nuevo-gasto').addEventListener('click', function(){
   if(personas.length<2){ alert('Agregá al menos 2 personas primero.'); showTab('personas'); return; }
   openModalGasto(-1);
 });
@@ -463,6 +464,14 @@ function renderResultado() {
 
   el.innerHTML = html;
 }
+
+// Aviso al refrescar o salir
+window.addEventListener('beforeunload', function(e) {
+  if(personas.length > 0 || gastos.length > 0) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
 
 // Init
 renderPersonas();
