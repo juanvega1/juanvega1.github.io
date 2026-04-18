@@ -4,8 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Mis Apps">
-  <title>Mis Apps</title>
+  <meta name="apple-mobile-web-app-title" content="Juan Vega">
+  <title>Juan Vega — Apps</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230d0d0d'/><text x='10' y='46' font-family='system-ui,sans-serif' font-size='36' font-weight='800' fill='white'>J</text><text x='32' y='46' font-family='system-ui,sans-serif' font-size='36' font-weight='800' fill='%23c0392b'>V</text></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230d0d0d'/><text x='10' y='46' font-family='system-ui,sans-serif' font-size='36' font-weight='800' fill='white'>J</text><text x='32' y='46' font-family='system-ui,sans-serif' font-size='36' font-weight='800' fill='%23c0392b'>V</text></svg>">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0d0d0d; color: #e8e8e8; min-height: 100vh; }
@@ -36,7 +38,7 @@
     .app-card-empty { background: transparent; border: 1px dashed #1f1f1f; border-radius: 14px; padding: 22px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 160px; gap: 10px; }
     .app-card-empty p { font-size: 12px; color: #2a2a2a; }
 
-    footer { border-top: 1px solid #1a1a1a; padding: 22px 32px; display: flex; align-items: center; justify-content: space-between; max-width: 100%; }
+    footer { border-top: 1px solid #1a1a1a; padding: 22px 32px; display: flex; align-items: center; justify-content: space-between; }
     .footer-text { font-size: 12px; color: #2e2e2e; }
     .footer-dot { width: 6px; height: 6px; background: #c0392b; border-radius: 50%; }
 
@@ -52,8 +54,8 @@
 <body>
 
   <nav>
-    <span class="nav-logo">JUAN<span>VEGA</span></span>
-    <span class="nav-count" id="app-count">1 app disponible</span>
+    <span class="nav-logo">juan<span>vega</span></span>
+    <span class="nav-count">1 app disponible</span>
   </nav>
 
   <div class="hero">
@@ -64,7 +66,7 @@
 
   <div class="section">
     <p class="section-label">Aplicaciones</p>
-    <div class="apps-grid" id="apps-grid">
+    <div class="apps-grid">
 
       <a href="calculadora_productos.html" class="app-card">
         <div class="app-icon">
@@ -91,7 +93,7 @@
   </div>
 
   <footer>
-    <span class="footer-text" id="footer-url">juanvega1.github.io</span>
+    <span class="footer-text">juanvega.github.io</span>
     <div class="footer-dot"></div>
   </footer>
 
