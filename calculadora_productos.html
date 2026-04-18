@@ -16,61 +16,67 @@
     nav { background: #111; border-bottom: 1px solid #1f1f1f; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
     .nav-logo { font-size: 16px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
     .nav-logo span { color: #c0392b; }
-    .nav-back { font-size: 13px; color: #555; text-decoration: none; }
+    .nav-back { font-size: 13px; color: #888; text-decoration: none; }
     .nav-back:hover { color: #c0392b; }
 
-    .total-block { margin: 20px 20px 0; background: #111; border: 1px solid #1f1f1f; border-radius: 16px; padding: 28px 24px; text-align: center; }
+    .total-block { margin: 20px 16px 0; background: #111; border: 1px solid #1f1f1f; border-radius: 16px; padding: 28px 24px; text-align: center; }
     .total-label { font-size: 11px; font-weight: 700; color: #c0392b; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 10px; }
     .total-val { font-size: 54px; font-weight: 800; color: #fff; font-variant-numeric: tabular-nums; line-height: 1; letter-spacing: -2px; }
-    .total-items { font-size: 12px; color: #3a3a3a; margin-top: 10px; }
+    .total-items { font-size: 12px; color: #666; margin-top: 10px; }
 
-    .form-card { margin: 14px 20px 0; background: #111; border: 1px solid #1f1f1f; border-radius: 16px; padding: 22px; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
-    .field label { display: block; font-size: 11px; font-weight: 700; color: #3a3a3a; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+    .form-card { margin: 14px 16px 0; background: #111; border: 1px solid #1f1f1f; border-radius: 16px; padding: 20px 16px; }
 
-    .qty-wrap { display: flex; align-items: center; background: #181818; border: 1px solid #252525; border-radius: 10px; overflow: hidden; height: 46px; }
-    .qty-btn { width: 46px; height: 46px; border: none; background: transparent; color: #e8e8e8; font-size: 22px; font-weight: 300; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .qty-btn:active { background: #1f1f1f; }
-    .qty-num { flex: 1; text-align: center; font-size: 17px; font-weight: 700; color: #fff; border: none; background: transparent; outline: none; }
+    /* Fila de inputs: columnas en pantallas grandes, filas en móvil pequeño */
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+    @media (max-width: 360px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
 
-    .price-input { width: 100%; height: 46px; border: 1px solid #252525; border-radius: 10px; background: #181818; color: #fff; font-size: 17px; font-weight: 600; padding: 0 14px; outline: none; font-family: inherit; -webkit-appearance: none; }
+    .field label { display: block; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+
+    .qty-wrap { display: flex; align-items: center; background: #181818; border: 1px solid #2a2a2a; border-radius: 10px; overflow: hidden; height: 46px; }
+    .qty-btn { width: 40px; height: 46px; border: none; background: transparent; color: #ccc; font-size: 22px; font-weight: 300; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .qty-btn:active { background: #222; }
+    .qty-num { flex: 1; text-align: center; font-size: 17px; font-weight: 700; color: #fff; border: none; background: transparent; outline: none; min-width: 0; }
+
+    .price-input { width: 100%; height: 46px; border: 1px solid #2a2a2a; border-radius: 10px; background: #181818; color: #fff; font-size: 17px; font-weight: 600; padding: 0 14px; outline: none; font-family: inherit; -webkit-appearance: none; }
     .price-input:focus { border-color: #c0392b; }
-    .price-input::placeholder { color: #2e2e2e; font-weight: 400; }
+    .price-input::placeholder { color: #444; font-weight: 400; }
     .price-input.error { border-color: #7a1a1a; background: #1a0808; }
 
-    .preview { background: #181818; border: 1px solid #1f1f1f; border-radius: 10px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-    .preview-lbl { font-size: 13px; color: #444; }
+    .preview { background: #181818; border: 1px solid #222; border-radius: 10px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .preview-lbl { font-size: 13px; color: #888; }
     .preview-val { font-size: 20px; font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; }
 
     .btn-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
     .add-btn { height: 50px; background: #c0392b; color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; }
     .add-btn:active { background: #a93226; transform: scale(0.98); }
-    .clear-btn { height: 50px; padding: 0 18px; background: transparent; color: #c0392b; border: 1px solid #2a1010; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; white-space: nowrap; }
+    .clear-btn { height: 50px; padding: 0 16px; background: transparent; color: #c0392b; border: 1px solid #2a1010; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; white-space: nowrap; }
     .clear-btn:hover { background: #1a0808; }
     .clear-btn:active { transform: scale(0.98); }
     .clear-btn:disabled { opacity: 0.25; cursor: not-allowed; pointer-events: none; }
 
-    .section-label { font-size: 11px; font-weight: 700; color: #2e2e2e; text-transform: uppercase; letter-spacing: 0.1em; margin: 22px 24px 10px; }
+    .section-label { font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.1em; margin: 22px 20px 10px; }
 
-    .table-wrap { margin: 0 20px; background: #111; border: 1px solid #1f1f1f; border-radius: 16px; overflow: hidden; }
+    .table-wrap { margin: 0 16px; background: #111; border: 1px solid #1f1f1f; border-radius: 16px; overflow: hidden; }
     table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
-    th { background: #0f0f0f; color: #333; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; padding: 10px 14px; text-align: left; border-bottom: 1px solid #1a1a1a; }
+    th { background: #0f0f0f; color: #666; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; padding: 10px 12px; text-align: left; border-bottom: 1px solid #1a1a1a; }
     th.r { text-align: right; }
-    td { padding: 12px 14px; border-bottom: 1px solid #161616; color: #e8e8e8; vertical-align: middle; }
+    td { padding: 12px 12px; border-bottom: 1px solid #161616; color: #e8e8e8; vertical-align: middle; }
     td.r { text-align: right; font-variant-numeric: tabular-nums; }
-    td.muted { color: #444; }
+    td.muted { color: #555; }
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: #141414; }
 
     .del-btn { width: 26px; height: 26px; border-radius: 50%; border: 1px solid #2a1010; background: transparent; color: #7a2020; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-left: auto; line-height: 1; }
     .del-btn:hover { background: #1a0808; border-color: #c0392b; color: #c0392b; }
 
-    .empty-msg { text-align: center; padding: 36px 20px; color: #2a2a2a; font-size: 13px; }
+    .empty-msg { text-align: center; padding: 36px 20px; color: #444; font-size: 13px; }
 
-    .col-n { width: 30px; } .col-qty { width: 65px; } .col-price { width: 105px; } .col-sub { width: 115px; } .col-del { width: 38px; }
+    .col-n { width: 28px; } .col-qty { width: 60px; } .col-price { width: 100px; } .col-sub { width: 110px; } .col-del { width: 36px; }
 
     footer { border-top: 1px solid #1a1a1a; margin-top: 28px; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; }
-    .footer-text { font-size: 11px; color: #2a2a2a; }
+    .footer-text { font-size: 11px; color: #444; }
     .footer-dot { width: 6px; height: 6px; background: #c0392b; border-radius: 50%; }
 
     .error-shake { animation: shake 0.3s; }
