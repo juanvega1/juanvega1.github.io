@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Calculadora">
+  <title>Calculadora de productos</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f2f2f7; color: #1c1c1e; min-height: 100vh; padding-bottom: 40px; }
+    .header { background: #fff; padding: 16px 20px 12px; border-bottom: 0.5px solid #d1d1d6; position: sticky; top: 0; z-index: 10; }
+    .header h1 { font-size: 17px; font-weight: 600; text-align: center; color: #1c1c1e; }
+    .total-block { background: #fff; margin: 16px 16px 0; border-radius: 16px; padding: 24px 20px; text-align: center; }
+    .total-lbl { font-size: 13px; color: #8e8e93; margin-bottom: 6px; letter-spacing: 0.02em; }
+    .total-val { font-size: 52px; font-weight: 600; color: #1c1c1e; font-variant-numeric: tabular-nums; line-height: 1; letter-spacing: -1px; }
+    .total-items { font-size: 12px; color: #aeaeb2; margin-top: 8px; }
+    .form-card { background: #fff; margin: 12px 16px 0; border-radius: 16px; padding: 20px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+    .field label { display: block; font-size: 11px; font-weight: 600; color: #8e8e93; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+    .qty-input-wrap { display: flex; align-items: center; background: #f2f2f7; border-radius: 10px; overflow: hidden; height: 44px; }
+    .qty-btn { width: 44px; height: 44px; border: none; background: transparent; color: #1c1c1e; font-size: 22px; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 300; }
+    .qty-btn:active { background: #e5e5ea; }
+    .qty-num { flex: 1; text-align: center; font-size: 17px; font-weight: 600; color: #1c1c1e; border: none; background: transparent; outline: none; width: 40px; }
+    .price-input { width: 100%; height: 44px; border: none; border-radius: 10px; background: #f2f2f7; color: #1c1c1e; font-size: 17px; font-weight: 500; padding: 0 14px; outline: none; font-family: inherit; -webkit-appearance: none; }
+    .price-input:focus { background: #e8e8ed; }
+    .price-input::placeholder { color: #c7c7cc; font-weight: 400; }
+    .price-input.error { background: #fff0f0; }
+    .subtotal-preview { background: #f2f2f7; border-radius: 10px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .subtotal-preview-lbl { font-size: 13px; color: #8e8e93; }
+    .subtotal-preview-val { font-size: 20px; font-weight: 600; color: #1c1c1e; font-variant-numeric: tabular-nums; }
+    .btn-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+    .submit-btn { height: 50px; background: #1c1c1e; color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: inherit; }
+    .submit-btn:active { background: #3a3a3c; transform: scale(0.98); }
+    .clear-btn { height: 50px; padding: 0 18px; background: transparent; color: #ff3b30; border: 1px solid #ff3b30; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; white-space: nowrap; }
+    .clear-btn:active { background: #fff0f0; transform: scale(0.98); }
+    .clear-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .section-title { font-size: 13px; font-weight: 600; color: #8e8e93; text-transform: uppercase; letter-spacing: 0.06em; margin: 20px 20px 8px; }
+    .table-wrap { background: #fff; margin: 0 16px; border-radius: 16px; overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; table-layout: fixed; }
+    th { background: #f2f2f7; color: #8e8e93; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; padding: 10px 14px; text-align: left; border-bottom: 0.5px solid #d1d1d6; }
+    th.r { text-align: right; }
+    td { padding: 12px 14px; border-bottom: 0.5px solid #f2f2f7; color: #1c1c1e; vertical-align: middle; }
+    td.r { text-align: right; font-variant-numeric: tabular-nums; }
+    tr:last-child td { border-bottom: none; }
+    .del-btn { width: 28px; height: 28px; border-radius: 50%; border: none; background: #ff3b30; color: #fff; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-left: auto; line-height: 1; }
+    .del-btn:active { background: #d63029; transform: scale(0.92); }
+    .empty-msg { text-align: center; padding: 32px 20px; color: #aeaeb2; font-size: 14px; }
+    .col-n { width: 32px; } .col-qty { width: 70px; } .col-price { width: 100px; } .col-sub { width: 110px; } .col-del { width: 40px; }
+    .error-shake { animation: shake 0.35s; }
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+  </style>
+</head>
+<body>
+  <div class="header"><h1>Calculadora de productos</h1></div>
+
+  <div class="total-block">
+    <p class="total-lbl">Total</p>
+    <p class="total-val" id="total-val">$ 0</p>
+    <p class="total-items" id="total-items">Sin ítems cargados</p>
+  </div>
+
+  <div class="form-card">
+    <div class="form-row">
+      <div class="field">
+        <label>Cantidad</label>
+        <div class="qty-input-wrap">
+          <button class="qty-btn" id="btn-minus">−</button>
+          <input class="qty-num" id="qty" type="number" value="1" min="1" readonly>
+          <button class="qty-btn" id="btn-plus">+</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Precio unitario</label>
+        <input class="price-input" id="price" type="number" min="0" placeholder="0" inputmode="decimal">
+      </div>
+    </div>
+    <div class="subtotal-preview">
+      <span class="subtotal-preview-lbl">Precio × cantidad</span>
+      <span class="subtotal-preview-val" id="preview-val">$ 0</span>
+    </div>
+    <div class="btn-row">
+      <button class="submit-btn" id="add-btn">Agregar</button>
+      <button class="clear-btn" id="clear-btn" disabled>Limpiar todo</button>
+    </div>
+  </div>
+
+  <p class="section-title">Ítems</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="col-n">#</th>
+          <th class="col-qty r">Cant.</th>
+          <th class="col-price r">Precio</th>
+          <th class="col-sub r">Subtotal</th>
+          <th class="col-del"></th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <tr><td colspan="5" class="empty-msg">Agregá productos usando el formulario</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const qtyEl = document.getElementById('qty');
+    const priceEl = document.getElementById('price');
+    const previewEl = document.getElementById('preview-val');
+    const totalValEl = document.getElementById('total-val');
+    const totalItemsEl = document.getElementById('total-items');
+    const tbody = document.getElementById('tbody');
+    const clearBtn = document.getElementById('clear-btn');
+    let rows = [], counter = 0;
+
+    function fmt(n) { return '$ ' + Math.round(n).toLocaleString('es-AR'); }
+
+    function updatePreview() {
+      previewEl.textContent = fmt((parseInt(qtyEl.value) || 1) * (parseFloat(priceEl.value) || 0));
+    }
+
+    function updateTotal() {
+      const total = rows.reduce((s, r) => s + r.subtotal, 0);
+      totalValEl.textContent = fmt(total);
+      const n = rows.length;
+      totalItemsEl.textContent = n === 0 ? 'Sin ítems cargados' : n === 1 ? '1 ítem cargado' : n + ' ítems cargados';
+      clearBtn.disabled = n === 0;
+    }
+
+    function renderTable() {
+      while (tbody.rows.length) tbody.deleteRow(0);
+      if (rows.length === 0) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = '<td colspan="5" class="empty-msg">Agregá productos usando el formulario</td>';
+        tbody.appendChild(tr);
+        return;
+      }
+      rows.forEach((r, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = '<td>' + (i+1) + '</td><td class="r">' + r.qty + '</td><td class="r">' + fmt(r.price) + '</td><td class="r"><strong>' + fmt(r.subtotal) + '</strong></td><td><button class="del-btn" data-id="' + r.id + '">×</button></td>';
+        tbody.appendChild(tr);
+      });
+    }
+
+    document.getElementById('btn-minus').addEventListener('click', () => { const v = parseInt(qtyEl.value)||1; if(v>1){qtyEl.value=v-1;updatePreview();} });
+    document.getElementById('btn-plus').addEventListener('click', () => { qtyEl.value=(parseInt(qtyEl.value)||1)+1; updatePreview(); });
+    priceEl.addEventListener('input', updatePreview);
+
+    document.getElementById('add-btn').addEventListener('click', () => {
+      const qty = parseInt(qtyEl.value) || 1;
+      const price = parseFloat(priceEl.value);
+      if (!price || price <= 0) {
+        priceEl.classList.add('error-shake', 'error');
+        priceEl.focus();
+        setTimeout(() => priceEl.classList.remove('error-shake', 'error'), 1000);
+        return;
+      }
+      rows.push({ id: ++counter, qty, price, subtotal: qty * price });
+      renderTable(); updateTotal();
+      priceEl.value = ''; qtyEl.value = 1; updatePreview();
+    });
+
+    clearBtn.addEventListener('click', () => {
+      if (!confirm('¿Limpiar toda la tabla?')) return;
+      rows = []; renderTable(); updateTotal();
+      priceEl.value = ''; qtyEl.value = 1; updatePreview();
+    });
+
+    tbody.addEventListener('click', (e) => {
+      const btn = e.target.closest('.del-btn');
+      if (!btn) return;
+      rows = rows.filter(r => r.id !== parseInt(btn.dataset.id));
+      renderTable(); updateTotal();
+    });
+
+    updatePreview();
+  </script>
+</body>
+</html>
