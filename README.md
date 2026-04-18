@@ -2,4 +2,4 @@
 
 Calculadora de productos
 
-[Usar]((/calculadora_productos.html)
+[Usar](/calculadora_productos.html)
