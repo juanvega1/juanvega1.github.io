@@ -264,7 +264,7 @@ function renderPersonas() {
         g.beneficiarios = g.beneficiarios.filter(function(b){ return b!==nombre; });
       });
       gastos = gastos.filter(function(g){ return g.beneficiarios.length>0; });
-      renderPersonas(); renderGastos();
+      renderPersonas(); renderGastos(); saveData();
     });
   });
 }
@@ -277,6 +277,7 @@ document.getElementById('btn-add-persona').addEventListener('click', function(){
   personas.push(n);
   inp.value='';
   renderPersonas();
+  saveData();
 });
 document.getElementById('inp-nombre').addEventListener('keydown', function(e){
   if(e.key==='Enter') document.getElementById('btn-add-persona').click();
@@ -291,7 +292,7 @@ document.getElementById('reset-cancel').addEventListener('click', function(){
 });
 document.getElementById('reset-confirm').addEventListener('click', function(){
   personas=[]; gastos=[];
-  renderPersonas(); renderGastos();
+  renderPersonas(); renderGastos(); saveData();
   document.getElementById('modal-reset').classList.remove('active');
   showTab('personas');
 });
@@ -322,7 +323,7 @@ function renderGastos() {
     btn.addEventListener('click', function(){ openModalGasto(parseInt(btn.dataset.edit)); });
   });
   el.querySelectorAll('[data-del]').forEach(function(btn){
-    btn.addEventListener('click', function(){ gastos.splice(parseInt(btn.dataset.del),1); renderGastos(); });
+    btn.addEventListener('click', function(){ gastos.splice(parseInt(btn.dataset.del),1); renderGastos(); saveData(); });
   });
 }
 
@@ -372,7 +373,7 @@ document.getElementById('mg-save').addEventListener('click', function(){
 
   var obj = { desc: desc||'Sin descripción', monto: monto, payer: payer, beneficiarios: benes };
   if(editIdx>=0){ gastos[editIdx]=obj; } else { gastos.push(obj); }
-  renderGastos();
+  renderGastos(); saveData();
   document.getElementById('modal-gasto').classList.remove('active');
 });
 
@@ -465,15 +466,25 @@ function renderResultado() {
   el.innerHTML = html;
 }
 
-// Aviso al refrescar o salir
-window.addEventListener('beforeunload', function(e) {
-  if(personas.length > 0 || gastos.length > 0) {
-    e.preventDefault();
-    e.returnValue = '';
-  }
-});
+// ---- STORAGE ----
+function saveData() {
+  try {
+    localStorage.setItem('jv_personas', JSON.stringify(personas));
+    localStorage.setItem('jv_gastos', JSON.stringify(gastos));
+  } catch(e) {}
+}
+
+function loadData() {
+  try {
+    var p = localStorage.getItem('jv_personas');
+    var g = localStorage.getItem('jv_gastos');
+    if(p) personas = JSON.parse(p);
+    if(g) gastos = JSON.parse(g);
+  } catch(e) {}
+}
 
 // Init
+loadData();
 renderPersonas();
 renderGastos();
 </script>
