@@ -210,7 +210,7 @@
     function resetForm() { priceEl.value=''; qtyEl.value=1; updatePreview(); }
 
     function doClear() {
-      rows=[]; renderTable(); updateTotal(); resetForm();
+      rows=[]; renderTable(); updateTotal(); resetForm(); saveData();
       modal.classList.remove('active');
     }
 
@@ -232,7 +232,7 @@
         return;
       }
       rows.push({id:++counter, qty:qty, price:price, subtotal:qty*price});
-      renderTable(); updateTotal(); resetForm();
+      renderTable(); updateTotal(); resetForm(); saveData();
     });
 
     clearBtn.addEventListener('click', function(){
@@ -253,10 +253,27 @@
       var btn = e.target.closest('.del-btn');
       if(!btn) return;
       rows = rows.filter(function(r){ return r.id!==parseInt(btn.dataset.id); });
-      renderTable(); updateTotal();
+      renderTable(); updateTotal(); saveData();
     });
 
     updatePreview();
+
+    function saveData() {
+      try { localStorage.setItem('jv_calc_rows', JSON.stringify(rows)); localStorage.setItem('jv_calc_counter', counter); } catch(e) {}
+    }
+
+    function loadData() {
+      try {
+        var r = localStorage.getItem('jv_calc_rows');
+        var c = localStorage.getItem('jv_calc_counter');
+        if(r) rows = JSON.parse(r);
+        if(c) counter = parseInt(c);
+      } catch(e) {}
+    }
+
+    loadData();
+    renderTable();
+    updateTotal();
   </script>
 </body>
 </html>
