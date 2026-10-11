@@ -147,6 +147,16 @@ input[type=text]{font:inherit;padding:10px 12px;border-radius:12px;border:2px so
 .why{color:var(--muted)}
 .lvl{background:var(--leash-soft);border-radius:12px;padding:10px 12px;font-weight:700}
 .lvl span{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--leash)}
+.gear{display:grid;gap:8px}
+.gear>span{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.gchips{display:flex;flex-wrap:wrap;gap:6px}
+.gchip{border:2px solid var(--line);background:var(--bg);border-radius:99px;padding:4px 12px;font-size:.85rem;font-weight:700;color:var(--ink)}
+.gchip.sel{border-color:var(--leash);color:var(--leash)}
+.gdesc{font-size:.9rem;background:var(--bg);border-radius:12px;padding:10px 12px}
+.gdesc b{display:block}
+.ltitle .gear{margin-top:12px}
+.feat{background:var(--leash-soft);border-radius:16px;padding:14px 16px;display:grid;gap:6px}
+.feat b{font-family:var(--f-display);font-size:1.1rem}
 ol.steps{margin:0;padding-left:1.3em;display:grid;gap:6px}
 .tip{border-left:4px solid var(--ball);padding:4px 0 4px 12px;font-size:.95rem}
 .src{font-size:.82rem;color:var(--muted)}
@@ -485,6 +495,35 @@ const GOALS = [
  {id:"correa",t:"Pasea sin tirar",cats:["correa","autocontrol"],lo:"Me arrastra",hi:"Correa floja"},
  {id:"libertad",t:"Suelto conmigo",cats:["libertad"],lo:"Ni pensarlo",hi:"Suelto y atento"}
 ];
+const GEAR = {
+ premios:{t:"Premios chicos",d:"Del tamaño de una arveja y blandos, para que los trague rápido. Si está motivado, puede ser su propio alimento."},
+ premiosTop:{t:"Premios de máximo valor",d:"Pollo, salchicha, queso o paté de hígado en pomo. Los que lo vuelven loco, reservados para la llamada y los momentos difíciles."},
+ rinonera:{t:"Riñonera de premios",d:"Con cierre magnético o de clip, para sacar el premio en menos de un segundo. El bolsillo del pantalón es demasiado lento."},
+ manta:{t:"Manta o camita portátil",d:"Siempre la misma, liviana y lavable, para poder llevarla de visita o de viaje. Su olor es parte del entrenamiento."},
+ kong:{t:"Kong o juguete rellenable",d:"De goma resistente y del tamaño adecuado para su boca. Tener 3 o 4 congelados ahorra mucho tiempo."},
+ alfombra:{t:"Alfombra olfativa",d:"Opcional. Una toalla enrollada con premios adentro cumple la misma función."},
+ juguete:{t:"Juguete de tirar",d:"Una soga o pelota con cuerda que solo aparece para entrenar, así mantiene su valor."},
+ grabacion:{t:"Grabación del timbre",d:"Grabá tu propio timbre con el celular: controlás el volumen y podés practicar sin ayuda."},
+ ayudante:{t:"Un ayudante",d:"Un familiar, amigo o vecino que siga tus instrucciones y no se ponga a jugar con el perro."},
+ perroAmigo:{t:"Un perro amigo tranquilo",d:"Equilibrado y paciente, que no se enganche con la intensidad del tuyo."},
+ arnesFrontal:{t:"Arnés con anilla en el pecho",d:"Arnés en Y con dos anillas, una en el pecho y otra en la espalda. Enganchado adelante, cuando tira su cuerpo gira hacia vos y pierde fuerza. Es el mejor para la etapa de aprender a no tirar."},
+ arnesH:{t:"Arnés H o en Y (anilla en la espalda)",d:"Cómodo y no le restringe los hombros. Ideal para olfato, línea larga y paseos sueltos. Para un perro que tira no ayuda: con la anilla en la espalda tira con todo el cuerpo."},
+ correa2:{t:"Correa de 2 m con doble mosquetón",d:"La más útil para entrenar: el largo justo para que quede floja y puedas premiar junto a tu pierna. Con dos mosquetones la enganchás al pecho y a la espalda a la vez."},
+ correa3:{t:"Correa de 3 a 5 m",d:"Perfecta para paseos de olfato y para darle más libertad en lugares tranquilos. Para el semáforo es demasiado larga: acortala en la mano."},
+ linea:{t:"Línea larga de 10 m",d:"De biothane: no absorbe agua ni barro y se enreda menos. Sin manija, para que no se enganche en ramas. Siempre al arnés, nunca al collar."},
+ guantes:{t:"Guantes",d:"Para frenar la línea larga sin quemarte las manos. Nunca te enrolles la línea en los dedos."},
+ silbato:{t:"Silbato para perros",d:"Uno de pastor o de entrenamiento, como el Acme 211.5. Siempre el mismo, colgado del cuello."},
+ cana:{t:"Caña de juego (flirt pole)",d:"Una vara con una cuerda y un juguete en la punta. Se consigue en tiendas de mascotas o se arma con una caña y una soga."},
+ gps:{t:"Chapita y rastreador GPS",d:"Chapita con tu teléfono siempre puesta. Un GPS en el collar es opcional, pero da tranquilidad en las salidas sueltos."}
+};
+const GEAR_GROUPS = [
+ ["Paseo y correa",["arnesFrontal","arnesH","correa2","correa3","linea","guantes"]],
+ ["Premios",["premios","premiosTop","rinonera"]],
+ ["Casa y calma",["manta","kong","alfombra","juguete","grabacion"]],
+ ["Llamada y libertad",["silbato","cana","gps"]],
+ ["Personas y perros",["ayudante","perroAmigo"]]
+];
+const GEAR_BY_EX = {"marcador": ["premios"], "nombre": ["premios"], "miradas": ["premios", "rinonera"], "premios": ["premios", "premiosTop"], "capturar": ["premios"], "olfato": ["premios", "alfombra"], "onoff": ["juguete", "premios"], "masticar": ["kong", "manta"], "manta1": ["manta", "premios"], "manta2": ["manta", "premios"], "manta3": ["manta", "premios"], "relax": ["manta", "premios"], "yerchoice": ["premios"], "espera": ["arnesFrontal", "correa2", "premios"], "platocomida": [], "dejalo": ["premios", "correa2"], "arnes": ["arnesFrontal", "correa2", "premios"], "semaforo": ["arnesFrontal", "correa2", "premios", "rinonera"], "zona": ["arnesFrontal", "correa2", "premios", "rinonera"], "giros": ["arnesFrontal", "correa2", "premios"], "primeros5": ["arnesFrontal", "correa2", "premios"], "olfatoPaseo": ["arnesH", "correa3", "premios"], "timbre1": ["grabacion", "premios"], "timbre2": ["grabacion", "manta", "premios"], "cuatropatas": ["premios"], "visitafalsa": ["ayudante", "correa2", "manta", "premios"], "saludo": ["ayudante", "correa2", "premios"], "visitareal": ["correa2", "manta", "kong", "premios"], "ll1": ["premiosTop"], "ll2": ["ayudante", "premiosTop"], "ll3": ["premiosTop", "juguete"], "ll4": ["premiosTop"], "ll5": ["arnesH", "linea", "guantes", "premiosTop"], "ll6": ["arnesH", "linea", "premiosTop"], "ll7": ["arnesH", "linea", "premiosTop"], "umbral": ["arnesFrontal", "correa2", "premiosTop"], "lat": ["arnesFrontal", "correa2", "premiosTop"], "123": ["arnesFrontal", "correa2", "premios"], "paralela": ["arnesFrontal", "correa2", "perroAmigo", "premios"], "permiso": ["arnesH", "correa3", "premios"], "3seg": ["correa2", "premios"], "leerperros": [], "interrumpe": ["perroAmigo", "arnesH", "linea", "premiosTop"], "arrastre": ["arnesH", "linea", "guantes", "premiosTop"], "escondidas": ["arnesH", "linea", "premiosTop"], "radio": ["arnesH", "linea", "premiosTop"], "silbato": ["silbato", "premiosTop"], "quietoDist": ["premios"], "cordon": ["correa2", "premios"], "pieSuelto": ["premios", "rinonera"], "animales": ["arnesH", "linea", "premiosTop"], "flirt": ["cana", "premios"], "campo": ["arnesH", "linea", "silbato", "premiosTop", "gps"]};
 const PRINCIPLES = [
  ["Premiá lo que querés ver","Es más rápido enseñarle qué hacer que castigar lo que no. Todos los adiestradores modernos coinciden en esto."],
  ["Sesiones cortas","3 a 5 minutos, varias veces al día. Terminá siempre con un acierto."],
@@ -608,6 +647,7 @@ function exCard(id, lvl, n){
     h += `<div class="cbody"><p class="why">${esc(e.why)}</p>`;
     if(n!=null) h += `<div class="lvl"><span>Meta de hoy</span>${esc(e.lv[lvl])}</div>`;
     else h += `<div class="lvl"><span>Niveles</span>${e.lv.map((l,i)=>`${i+1}. ${esc(l)}`).join("<br>")}</div>`;
+    h += gearBlock(GEAR_BY_EX[id]||[], key, "Qué necesitás");
     h += `<ol class="steps">${e.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol><p class="tip">${esc(e.tip)}</p><p class="src">Basado en: ${esc(e.src)}</p>`;
     if(n!=null && !isDone(n)) h += `<div class="rate" role="group" aria-label="¿Cómo le fue?">${[["ok","Lo logró"],["meh","Más o menos"],["hard","Le costó"]].map(([v,l])=>`<button class="${v}" data-rate="${id}" data-v="${v}" aria-pressed="${r===v}">${l}</button>`).join("")}</div>`;
     h += `</div>`;
@@ -615,11 +655,17 @@ function exCard(id, lvl, n){
   return h + `</article>`;
 }
 
+function gearBlock(ids, key, label){
+  if(!ids.length) return "";
+  const sel = view.gear?.[key];
+  return `<div class="gear"><span>${label}</span><div class="gchips">${ids.map(g=>`<button class="gchip ${sel===g?"sel":""}" data-gear="${g}" data-gkey="${key}" aria-expanded="${sel===g}">${esc(GEAR[g].t)}</button>`).join("")}</div>${sel?`<div class="gdesc"><b>${esc(GEAR[sel].t)}</b>${esc(GEAR[sel].d)}</div>`:""}</div>`;
+}
+
 function renderLesson(n){
   const ids = PLAN[n-1], ui = Math.floor((n-1)/7), u = UNITS[ui], test = n%7===0, done = isDone(n);
   const rated = ids.filter(id => done || S.wip[n]?.[id]).length;
   let h = `<div class="lhead"><button class="back" data-act="home" aria-label="Volver al camino">${icon("i-back")}</button><div class="bar" aria-label="${rated} de 3"><i style="width:${rated/3*100}%"></i></div></div>
-  <div class="ltitle"><small>Semana ${ui+1} · ${esc(u.t)}</small><h1>${test?"Prueba de la semana":"Día "+n}</h1>${test?`<div class="goal">Objetivo: ${esc(u.test)}</div>`:""}</div>
+  <div class="ltitle"><small>Semana ${ui+1} · ${esc(u.t)}</small><h1>${test?"Prueba de la semana":"Día "+n}</h1>${test?`<div class="goal">Objetivo: ${esc(u.test)}</div>`:""}${gearBlock([...new Set(ids.flatMap(id=>GEAR_BY_EX[id]||[]))], "day-"+n, "Prepará para hoy")}</div>
   <div class="cards">${ids.map((id,i)=>exCard(id, LEVEL[n-1][i], n)).join("")}</div><div class="lfoot">`;
   if(done) h += `<p class="note">Completado el ${new Date(S.done[n].date+"T12:00").toLocaleDateString("es",{day:"numeric",month:"long"})}. Podés repetir estos ejercicios cuando quieras.</p><button class="btn ghost wide" data-act="home">Volver al camino</button>`;
   else h += `<button class="btn ${test?"ball":""} wide" data-complete="${n}" ${rated<3?"disabled":""}>${rated<3?`Calificá los 3 desafíos (${rated}/3)`:"Completar día"}</button><p class="note">Abrí cada desafío, practicalo y contanos cómo le fue a ${esc(nm())}.</p>`;
@@ -637,6 +683,10 @@ function renderCelebrate(){
 
 function renderLib(){
   let h = topBar() + `<div class="sect"><h2>Principios</h2><p>Lo que repiten los mejores adiestradores del mundo, en ocho reglas.</p><div class="princ">${PRINCIPLES.map(([t,d])=>`<div><b>${esc(t)}</b><span>${esc(d)}</span></div>`).join("")}</div></div>`;
+  h += `<div class="sect" id="equipo"><h2>Equipo recomendado</h2><p>Qué usar en cada etapa. Cada desafío te muestra lo que necesitás.</p>
+    <div class="feat"><b>¿Arnés H y correa de 3 m?</b><span>Si tu arnés H tiene enganche en el pecho, es todo lo que necesitás. En las semanas de correa floja enganchá adelante. Para la línea larga y los paseos sueltos, enganchá en la espalda: así un frenazo no le tuerce el cuerpo. La correa de 3 m es perfecta para los paseos de olfato. Para el semáforo y la zona de premio, sumá una de 2 m o acortá la tuya en la mano.</span></div>
+    ${GEAR_GROUPS.map(([gt,ids])=>`<h3 style="margin:18px 0 8px;font-size:1.1rem">${esc(gt)}</h3><div class="princ">${ids.map(g=>`<div><b>${esc(GEAR[g].t)}</b><span>${esc(GEAR[g].d)}</span></div>`).join("")}</div>`).join("")}
+    <h3 style="margin:18px 0 8px;font-size:1.1rem">Qué evitar</h3><div class="princ"><div><b>Correa extensible</b><span>Siempre tiene tensión, así que le enseña que tirar alarga la correa. Además es peligrosa cerca de otros perros.</span></div><div><b>Correa de lazo (slip lead)</b><span>Si tira, se cierra sobre el cuello como un collar de ahorque. En un perro que tira o se emociona con otros perros, presiona la tráquea y le enseña poco. Sirve para un traslado corto, como en el veterinario, no para entrenar.</span></div><div><b>Collares de ahorque, de púas o eléctricos</b><span>Funcionan con dolor y miedo, y pueden asociar a otros perros con ese dolor. Ninguno de los adiestradores en los que se basa esta app los recomienda.</span></div></div></div>`;
   h += `<div class="sect"><h2>Plan de emergencia: visitas</h2><div class="princ"><div><b>Si no tuviste tiempo de entrenar</b><span>Antes: 10 minutos de olfato. Al tocar el timbre: correa puesta y búsqueda de premios lejos de la puerta. Durante: Kong congelado en su manta. Saludo solo cuando esté tranquilo, de 3 segundos. Si se desborda, a otra habitación con el Kong, sin reto.</span></div></div></div>`;
   for(const [k,c] of Object.entries(CATS)){
     const ids = Object.keys(EX).filter(id=>EX[id].cat===k);
@@ -717,6 +767,7 @@ document.addEventListener("click", e=>{
   if(t.dataset.act==="toggletheme") return setTheme(isDark() ? "light" : "dark");
   if(t.dataset.tab){ view = {...view, tab:t.dataset.tab, day:null, celebrate:null, confirmReset:false}; window.scrollTo(0,0); return render(); }
   if(t.dataset.day){ const n=+t.dataset.day; if(!isOpen(n)) return; view = {...view, day:n, celebrate:null}; const first = PLAN[n-1].find(id=>!(S.wip[n]?.[id])) ; if(first && !isDone(n)) view.open[n+"-"+first]=true; window.scrollTo(0,0); return render(); }
+  if(t.dataset.gear){ view.gear = view.gear||{}; const k=t.dataset.gkey; view.gear[k] = view.gear[k]===t.dataset.gear ? null : t.dataset.gear; return render(); }
   if(t.dataset.toggle){ view.open[t.dataset.toggle] = !view.open[t.dataset.toggle]; return render(); }
   if(t.dataset.rate){
     const n = view.day, id = t.dataset.rate;
