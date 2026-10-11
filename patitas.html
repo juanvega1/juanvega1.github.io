@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2F5BEA">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Patitas">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23CFE33A'/%3E%3Cg fill='%2328310A' transform='translate(2.4 2.4) scale(.8)'%3E%3Cellipse cx='6' cy='9' rx='2.2' ry='2.8'/%3E%3Cellipse cx='10' cy='5.5' rx='2.2' ry='2.8'/%3E%3Cellipse cx='14.5' cy='5.5' rx='2.2' ry='2.8'/%3E%3Cellipse cx='18.3' cy='9.3' rx='2.2' ry='2.8'/%3E%3Cpath d='M12.2 11c-3 0-6.2 4.4-6.2 6.9 0 1.7 1.3 2.6 3 2.6 1.4 0 2.1-.7 3.2-.7s1.9.7 3.2.7c1.7 0 3-.9 3-2.6 0-2.5-3.2-6.9-6.2-6.9z'/%3E%3C/g%3E%3C/svg%3E">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Escuela de Patitas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito+Sans:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: una columna tipo app móvil (máx 560px), barra superior con racha/XP, camino en zigzag por unidades, navegación inferior fija. */
+:root{
+  --bg:#EEF2F7; --surface:#FFFFFF; --ink:#1B2533; --muted:#5C6B7E; --line:#D7DFEA;
+  --leash:#2F5BEA; --leash-ink:#FFFFFF; --leash-soft:#DCE5FF;
+  --ball:#CFE33A; --ball-ink:#28310A;
+  --ok:#1F9D63; --ok-soft:#D7F2E4; --meh:#B57A06; --meh-soft:#FCEFD0; --hard:#D2463B; --hard-soft:#FBE0DD;
+  --locked:#C9D2DE; --locked-ink:#7A8798; --shadow:rgba(27,37,51,.10);
+  --f-display:"Baloo 2", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --f-body:"Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10151D; --surface:#19212C; --ink:#E7EDF5; --muted:#97A5B7; --line:#2A3442;
+  --leash:#7C9BFF; --leash-ink:#0D1530; --leash-soft:#232F55;
+  --ball:#CFE33A; --ball-ink:#28310A;
+  --ok:#45C98A; --ok-soft:#163527; --meh:#E7B04A; --meh-soft:#3A2E14; --hard:#F07B70; --hard-soft:#3D1E1C;
+  --locked:#2E3949; --locked-ink:#7C8899; --shadow:rgba(0,0,0,.35); color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#10151D; --surface:#19212C; --ink:#E7EDF5; --muted:#97A5B7; --line:#2A3442;
+  --leash:#7C9BFF; --leash-ink:#0D1530; --leash-soft:#232F55;
+  --ball:#CFE33A; --ball-ink:#28310A;
+  --ok:#45C98A; --ok-soft:#163527; --meh:#E7B04A; --meh-soft:#3A2E14; --hard:#F07B70; --hard-soft:#3D1E1C;
+  --locked:#2E3949; --locked-ink:#7C8899; --shadow:rgba(0,0,0,.35); color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--leash);outline-offset:2px;border-radius:8px}
+h1,h2,h3{font-family:var(--f-display);line-height:1.15;margin:0;text-wrap:balance}
+.app{max-width:560px;margin:0 auto;padding-inline:16px;padding-block:0 110px}
+
+/* Top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;align-items:center;gap:12px;padding-block:12px;border-bottom:2px solid var(--line)}
+.dogbtn{display:flex;align-items:center;gap:8px;background:none;border:0;padding:4px;min-width:0;flex:1;text-align:left}
+.dogbtn .av{width:36px;height:36px;border-radius:50%;background:var(--ball);color:var(--ball-ink);display:grid;place-items:center;flex:none}
+.dogbtn b{font-family:var(--f-display);font-size:1.25rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat{display:flex;align-items:center;gap:4px;font-family:var(--f-display);font-weight:800;font-size:1.1rem;font-variant-numeric:tabular-nums}
+.stat svg{width:22px;height:22px}
+.stat.fire{color:var(--meh)} .stat.fire.off{color:var(--locked-ink)}
+.stat.xp{color:var(--leash)}
+.themebtn{background:none;border:2px solid var(--line);border-radius:12px;width:40px;height:40px;display:grid;place-items:center;color:var(--muted);flex:none}
+.themebtn svg{width:22px;height:22px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.seg button{border:2px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 4px;font-weight:800;font-size:.9rem}
+.seg button[aria-pressed="true"]{background:var(--leash);border-color:var(--leash);color:var(--leash-ink)}
+
+/* Path */
+.welcome{min-height:100%;display:grid;align-content:center;gap:22px;padding-block:40px 32px}
+.wl-mark{width:96px;height:96px;border-radius:28px;background:var(--ball);color:var(--ball-ink);display:grid;place-items:center;transform:rotate(-6deg);box-shadow:0 6px 0 color-mix(in srgb,var(--ball) 60%,#000)}
+.wl-mark svg{width:56px;height:56px}
+.welcome h1{font-size:2.6rem;line-height:1}
+.welcome .lead{margin:0;font-size:1.1rem;color:var(--muted);max-width:42ch}
+.wl-goals{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.wl-goals li{display:flex;gap:12px;align-items:center;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:10px 12px;font-weight:700}
+.wl-goals .ic{width:36px;height:36px;border-radius:10px;flex:none;display:grid;place-items:center;background:var(--leash-soft);color:var(--leash)}
+.wl-goals .ic svg{width:20px;height:20px}
+.wl-form{display:grid;gap:10px}
+.wl-form label{font-family:var(--f-display);font-size:1.3rem;font-weight:700}
+.wl-form input{font-size:1.1rem;padding:14px}
+.adv{margin-top:34px;text-align:center;font-family:var(--f-display);font-weight:800;font-size:1.05rem;color:var(--ball-ink);background:var(--ball);border-radius:99px;padding:8px 16px}
+.adv small{display:block;font-family:var(--f-body);font-weight:700;font-size:.8rem;opacity:.8}
+.unit.adv-u{background:var(--ink);color:var(--bg)}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row input{flex:1;min-width:0}
+input[type=text]{font:inherit;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--ink)}
+.today{margin-block:16px;display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:18px;background:var(--leash-soft)}
+.today .t{flex:1;min-width:0}
+.today small{display:block;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:.72rem}
+.today b{font-family:var(--f-display);font-size:1.15rem}
+.unit{margin-top:26px;border-radius:18px;padding:14px 16px;color:var(--leash-ink);background:var(--leash);display:flex;gap:12px;align-items:center}
+.unit.done{background:var(--ok);color:#fff}
+.unit .wk{font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.85}
+.unit h2{font-size:1.35rem}
+.unit p{margin:2px 0 0;opacity:.9;font-size:.92rem}
+.nodes{display:flex;flex-direction:column;align-items:center;gap:14px;padding-block:22px 6px}
+.node{position:relative;width:72px;height:66px;border-radius:50%;border:0;display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:1.3rem;
+  background:var(--locked);color:var(--locked-ink);box-shadow:0 6px 0 color-mix(in srgb,var(--locked) 70%,#000);transition:transform .12s}
+.node svg{width:28px;height:28px}
+.node.open{background:var(--leash);color:var(--leash-ink);box-shadow:0 6px 0 color-mix(in srgb,var(--leash) 65%,#000)}
+.node.done{background:var(--ok);color:#fff;box-shadow:0 6px 0 color-mix(in srgb,var(--ok) 65%,#000)}
+.node.test{width:84px;height:76px}
+.node.test.open{background:var(--ball);color:var(--ball-ink);box-shadow:0 6px 0 color-mix(in srgb,var(--ball) 60%,#000)}
+.node:not(:disabled):active{transform:translateY(4px);box-shadow:0 2px 0 color-mix(in srgb,var(--leash) 65%,#000)}
+.node:disabled{cursor:not-allowed}
+.node.cur::after{content:"";position:absolute;inset:-9px;border-radius:50%;border:4px solid var(--leash);opacity:.35;animation:pulse 1.6s ease-in-out infinite}
+.node.cur.test::after{border-color:var(--ball)}
+.bubble{position:absolute;bottom:calc(100% + 12px);left:50%;transform:translateX(-50%);white-space:nowrap;background:var(--surface);color:var(--leash);border:2px solid var(--line);font-size:.8rem;padding:2px 10px;border-radius:10px;letter-spacing:.04em;text-transform:uppercase}
+@keyframes pulse{50%{transform:scale(1.08);opacity:.15}}
+
+/* Bottom nav */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:2px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.nav div{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr)}
+.nav button{background:none;border:0;padding:10px 4px 12px;display:grid;justify-items:center;gap:2px;font-size:.78rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.nav svg{width:26px;height:26px}
+.nav button[aria-current="page"]{color:var(--leash)}
+
+/* Buttons */
+.btn{border:0;border-radius:14px;padding:12px 18px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;font-size:.9rem;background:var(--leash);color:var(--leash-ink);box-shadow:0 4px 0 color-mix(in srgb,var(--leash) 65%,#000)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--leash) 65%,#000)}
+.btn.ball{background:var(--ball);color:var(--ball-ink);box-shadow:0 4px 0 color-mix(in srgb,var(--ball) 60%,#000)}
+.btn.ghost{background:var(--surface);color:var(--ink);border:2px solid var(--line);box-shadow:0 4px 0 var(--line)}
+.btn:disabled{background:var(--locked);color:var(--locked-ink);box-shadow:0 4px 0 color-mix(in srgb,var(--locked) 70%,#000);cursor:not-allowed}
+.btn.wide{width:100%}
+
+/* Lesson */
+.lhead{display:flex;align-items:center;gap:12px;padding-block:16px 6px}
+.back{background:none;border:0;padding:6px;color:var(--muted);display:grid}
+.back svg{width:26px;height:26px}
+.bar{flex:1;height:16px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;background:var(--ok);transition:width .3s}
+.ltitle{padding-block:12px 4px}
+.ltitle small{color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.07em;font-size:.75rem}
+.ltitle h1{font-size:1.8rem}
+.goal{margin-top:10px;padding:12px 14px;border-radius:14px;background:var(--ball);color:var(--ball-ink);font-weight:700}
+.cards{display:grid;gap:14px;margin-top:16px}
+.card{background:var(--surface);border:2px solid var(--line);border-radius:18px;overflow:hidden}
+.card.r-ok{border-color:var(--ok)} .card.r-meh{border-color:var(--meh)} .card.r-hard{border-color:var(--hard)}
+.chead{width:100%;background:none;border:0;display:flex;gap:12px;align-items:center;padding:14px 16px;text-align:left}
+.chead .ic{width:44px;height:44px;border-radius:12px;flex:none;display:grid;place-items:center;background:var(--leash-soft);color:var(--leash)}
+.chead .ic svg{width:24px;height:24px}
+.chead .tx{flex:1;min-width:0}
+.chead h3{font-size:1.15rem}
+.chead small{color:var(--muted);font-weight:700}
+.chev{width:20px;height:20px;color:var(--muted);transition:transform .2s;flex:none}
+.card.open .chev{transform:rotate(180deg)}
+.cbody{padding:0 16px 16px;display:grid;gap:12px}
+.cbody p{margin:0}
+.why{color:var(--muted)}
+.lvl{background:var(--leash-soft);border-radius:12px;padding:10px 12px;font-weight:700}
+.lvl span{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--leash)}
+ol.steps{margin:0;padding-left:1.3em;display:grid;gap:6px}
+.tip{border-left:4px solid var(--ball);padding:4px 0 4px 12px;font-size:.95rem}
+.src{font-size:.82rem;color:var(--muted)}
+.rate{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.rate button{border:2px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 4px;font-weight:800;font-size:.85rem}
+.rate button[aria-pressed="true"].ok{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.rate button[aria-pressed="true"].meh{background:var(--meh-soft);border-color:var(--meh);color:var(--meh)}
+.rate button[aria-pressed="true"].hard{background:var(--hard-soft);border-color:var(--hard);color:var(--hard)}
+.badge{font-size:.72rem;font-weight:800;padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em}
+.badge.ok{background:var(--ok-soft);color:var(--ok)} .badge.meh{background:var(--meh-soft);color:var(--meh)} .badge.hard{background:var(--hard-soft);color:var(--hard)}
+.lfoot{margin-top:20px;display:grid;gap:10px}
+.note{font-size:.9rem;color:var(--muted);text-align:center}
+
+/* Celebration */
+.cele{text-align:center;padding-block:48px 20px;display:grid;gap:16px;justify-items:center}
+.cele .big{width:120px;height:120px;border-radius:50%;background:var(--ball);color:var(--ball-ink);display:grid;place-items:center;animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
+.cele .big svg{width:64px;height:64px}
+.cele h1{font-size:2rem}
+.cele p{margin:0;color:var(--muted);max-width:40ch}
+.chips{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.chip{border:2px solid var(--line);border-radius:14px;padding:8px 14px;background:var(--surface);font-family:var(--f-display);font-weight:800;font-size:1.1rem;display:flex;gap:6px;align-items:center}
+.chip svg{width:20px;height:20px}
+@keyframes pop{from{transform:scale(.3)}}
+
+/* Library & progress */
+.sect{margin-top:24px}
+.sect>h2{font-size:1.4rem;margin-bottom:10px}
+.sect>p{margin:0 0 12px;color:var(--muted)}
+.princ{display:grid;gap:10px}
+.princ div{background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:12px 14px}
+.princ b{font-family:var(--f-display);font-size:1.05rem;display:block}
+.princ span{color:var(--muted);font-size:.95rem}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:18px}
+.stats div{background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:12px 14px}
+.stats b{display:block;font-family:var(--f-display);font-size:1.8rem;line-height:1;font-variant-numeric:tabular-nums}
+.stats span{color:var(--muted);font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.goalc{background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:14px 16px;display:grid;gap:10px}
+.goalc h3{font-size:1.15rem}
+.goalc .meta{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:.85rem;font-weight:700}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.scale button{border:2px solid var(--line);background:var(--bg);border-radius:10px;padding:6px 0;font-weight:800}
+.scale button[aria-pressed="true"]{background:var(--leash);border-color:var(--leash);color:var(--leash-ink)}
+.scale-l{display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted)}
+.goals{display:grid;gap:12px}
+.medals{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.medal{display:grid;justify-items:center;gap:4px;text-align:center;font-size:.75rem;font-weight:700;color:var(--muted)}
+.medal i{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:var(--locked);color:var(--locked-ink);font-style:normal;font-family:var(--f-display);font-weight:800;font-size:1.2rem}
+.medal.on i{background:var(--ball);color:var(--ball-ink)}
+.medal.on{color:var(--ink)}
+.review{display:grid;gap:8px}
+.review div{display:flex;justify-content:space-between;gap:10px;align-items:center;background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:10px 12px}
+.empty{color:var(--muted);font-size:.95rem;background:var(--surface);border:2px dashed var(--line);border-radius:14px;padding:14px}
+.confirm{display:grid;gap:10px;background:var(--hard-soft);border-radius:14px;padding:14px}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="app" id="app"></div>
+<nav class="nav" aria-label="Secciones"><div>
+  <button data-tab="path" aria-current="page"><svg viewBox="0 0 24 24" fill="currentColor"><use href="#i-paw"/></svg>Camino</button>
+  <button data-tab="lib"><svg viewBox="0 0 24 24" fill="currentColor"><use href="#i-book"/></svg>Biblioteca</button>
+  <button data-tab="prog"><svg viewBox="0 0 24 24" fill="currentColor"><use href="#i-chart"/></svg>Progreso</button>
+</div></nav>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-paw" viewBox="0 0 24 24"><ellipse cx="6" cy="9" rx="2.2" ry="2.8"/><ellipse cx="10" cy="5.5" rx="2.2" ry="2.8"/><ellipse cx="14.5" cy="5.5" rx="2.2" ry="2.8"/><ellipse cx="18.3" cy="9.3" rx="2.2" ry="2.8"/><path d="M12.2 11c-3 0-6.2 4.4-6.2 6.9 0 1.7 1.3 2.6 3 2.6 1.4 0 2.1-.7 3.2-.7s1.9.7 3.2.7c1.7 0 3-.9 3-2.6 0-2.5-3.2-6.9-6.2-6.9z"/></symbol>
+  <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 2c.6 3.4 4.7 5.5 4.7 10.3A4.7 4.7 0 0 1 12 17a4.7 4.7 0 0 1-4.7-4.7c0-1.6.7-2.9 1.6-3.8.2 1.4 1 2.3 2 2.3-.6-3.6 0-6.7 1.1-8.8zM5 14.2C5 18.5 8.1 22 12 22s7-3.5 7-7.8c0-1-.2-2-.5-2.8-.4 4-3.2 7.1-6.5 7.1s-6.1-3.1-6.5-7.1c-.3.8-.5 1.8-.5 2.8z"/></symbol>
+  <symbol id="i-bone" viewBox="0 0 24 24"><path d="M7.5 3.5a2.6 2.6 0 0 0-2.5 3.3A2.6 2.6 0 1 0 6.8 11l6.2 6.2a2.6 2.6 0 1 0 4.2 1.8 2.6 2.6 0 1 0-.2-5.2L10.8 7.6A2.6 2.6 0 0 0 7.5 3.5z"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v16H6.5a1 1 0 0 0 0 2H20v2H6.5A2.5 2.5 0 0 1 4 19.5v-15zM8 6v2h8V6H8z"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 21V3h2v16h16v2H3zm4-4v-6h3v6H7zm5 0V7h3v10h-3zm5 0v-4h3v4h-3z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M9.5 16.2 5 11.7l-1.8 1.8 6.3 6.3L21 8.3l-1.8-1.8z"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><path d="M7 10V7a5 5 0 0 1 10 0v3h1.5v11h-13V10H7zm2 0h6V7a3 3 0 0 0-6 0v3z"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M7 3h10v2h4v3a5 5 0 0 1-4.6 5A5 5 0 0 1 13 15.9V18h3v3H8v-3h3v-2.1A5 5 0 0 1 7.6 13 5 5 0 0 1 3 8V5h4V3zm10 4v3.8A3 3 0 0 0 19 8V7h-2zM5 7v1a3 3 0 0 0 2 2.8V7H5z"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M18.3 5.7 16.9 4.3 12 9.2 7.1 4.3 5.7 5.7l4.9 4.9-4.9 4.9 1.4 1.4 4.9-4.9 4.9 4.9 1.4-1.4-4.9-4.9z"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="M7.4 8.6 12 13.2l4.6-4.6L18 10l-6 6-6-6z"/></symbol>
+  <symbol id="c-base" viewBox="0 0 24 24"><path d="M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16zm0 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 3a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></symbol>
+  <symbol id="c-calma" viewBox="0 0 24 24"><path d="M3 15h18v4H3zM5 11h14a2 2 0 0 1 2 2v1H3v-1a2 2 0 0 1 2-2zM14 3l1 2h-3l3 3h-3"/></symbol>
+  <symbol id="c-correa" viewBox="0 0 24 24"><path d="M6 3a3 3 0 0 0-1 5.8V21h2V8.8A3 3 0 0 0 6 3zm0 2a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm4 2c4 0 9 2 9 7s-4 7-7 7v-2c2 0 5-1.5 5-5s-4-5-7-5z"/></symbol>
+  <symbol id="c-visitas" viewBox="0 0 24 24"><path d="M5 2h11a1 1 0 0 1 1 1v18H4V3a1 1 0 0 1 1-1zm9 9a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM18 7h2v14h-2z"/></symbol>
+  <symbol id="c-llamada" viewBox="0 0 24 24"><path d="M3 10v4h3l5 4V6L6 10H3zm12.5 2A4.5 4.5 0 0 0 13 8v8a4.5 4.5 0 0 0 2.5-4zM13 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></symbol>
+  <symbol id="c-perros" viewBox="0 0 24 24"><path d="M4 8l2-4 2 3h3l2-3 2 4v4a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8zm4 3a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm4 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM15 14l2-2 3 3v6h-2v-3h-3v3h-2v-4z"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12.3 3a8 8 0 1 0 8.7 10.6A7 7 0 0 1 12.3 3z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM11 1h2v3h-2zM11 20h2v3h-2zM1 11h3v2H1zM20 11h3v2h-3zM4.2 5.6l1.4-1.4 2.1 2.1-1.4 1.4zM16.3 17.7l1.4-1.4 2.1 2.1-1.4 1.4zM4.2 18.4l2.1-2.1 1.4 1.4-2.1 2.1zM16.3 6.3l2.1-2.1 1.4 1.4-2.1 2.1z"/></symbol>
+  <symbol id="c-libertad" viewBox="0 0 24 24"><path d="M2 20 9 8l4 6.5 2.5-3.5L22 20H2zM17 3a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5z"/></symbol>
+  <symbol id="c-autocontrol" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3zm-1.2 14.2-3.5-3.5 1.4-1.4 2.1 2.1 4.6-4.6 1.4 1.4-6 6z"/></symbol>
+</svg>
+
+<script>
+/* ---------- Contenido ---------- */
+const CATS = {
+  base:{t:"Fundamentos"}, calma:{t:"Calma"}, autocontrol:{t:"Autocontrol"}, correa:{t:"Correa floja"},
+  visitas:{t:"Visitas"}, llamada:{t:"Llamada"}, perros:{t:"Otros perros"}, libertad:{t:"Libertad"}
+};
+const EX = {
+marcador:{cat:"base",t:"Carga la palabra «¡Sí!»",min:3,why:"Un marcador le dice a tu perro el instante exacto en que hizo algo bien. Es la base de todo lo demás.",
+ steps:["Tené 15 premios pequeños, del tamaño de una arveja.","Sin pedirle nada, decí «¡Sí!» con voz clara y en menos de 1 segundo dale un premio.","Repetí 15 veces en distintos lugares de la casa.","No muevas la mano hacia los premios antes de decir «¡Sí!»: primero la palabra, después la mano."],
+ lv:["15 repeticiones en una habitación tranquila.","15 repeticiones en otra habitación y en el patio."],
+ tip:"Si al oír «¡Sí!» gira la cabeza buscando el premio, la palabra ya está cargada.",src:"Condicionamiento clásico, método de Karen Pryor"},
+nombre:{cat:"base",t:"Juego del nombre",min:3,why:"Su nombre tiene que significar «mírame, algo bueno va a pasar», nunca «estás en problemas».",
+ steps:["Esperá a que esté mirando hacia otro lado.","Decí su nombre una sola vez, con tono alegre.","Cuando te mire: «¡Sí!» y premio.","Si no te mira en 2 segundos, hacé un ruidito o alejate un paso. No repitas el nombre."],
+ lv:["10 veces en casa sin distracciones.","10 veces en el patio o con la TV encendida.","10 veces en la vereda frente a casa."],
+ tip:"Nunca uses su nombre para retarlo. Para eso usá otra palabra.",src:"Emily Larlham (Kikopup)"},
+miradas:{cat:"base",t:"Premiá cuando te mira",min:5,why:"Cada vez que tu perro te mira por su cuenta está eligiendo conectar con vos. Si lo premiás, lo hará cada vez más, también con otros perros cerca.",
+ steps:["Llevá premios encima (una riñonera ayuda).","Cada vez que te mire sin que se lo pidas: «¡Sí!» y premio.","Contá cuántas veces lo hace en 5 minutos y anotá el número."],
+ lv:["5 minutos en casa.","5 minutos en el patio.","Los primeros 5 minutos del paseo."],
+ tip:"Los adiestradores de deporte construyen la conexión así: premiando que el perro los elija.",src:"Denise Fenzi, «engagement»"},
+premios:{cat:"base",t:"Arma tu escala de premios",min:5,why:"No todos los premios valen lo mismo. Con distracciones fuertes, como otros perros o visitas, necesitas pagar con los mejores.",
+ steps:["Prepará 5 tipos: alimento seco, galleta, queso, pollo, salchicha.","Poné dos en el suelo a la vez, separados, y mirá cuál elige primero.","Ordenalos de menor a mayor valor.","Reservá el número 1 solo para la llamada: ese es el «jackpot»."],
+ lv:["Hacé la prueba completa."],
+ tip:"Si usás muchos premios, reducí un poco su ración de comida de ese día.",src:"Principio de Premack y economía de refuerzos"},
+capturar:{cat:"calma",t:"Captura la calma",min:5,why:"Tu perro ya hace la conducta que querés (estar tranquilo), solo que nadie se la paga. Hoy empezás a pagarla.",
+ steps:["Tené premios en un bol alto, fuera de su alcance.","Cada vez que se eche tranquilo por su cuenta, acercate despacio y dejá un premio entre sus patas, sin hablar.","Si se levanta emocionado, no pasa nada: volvé a lo tuyo.","Hacelo al menos 10 veces durante el día."],
+ lv:["10 veces durante el día.","10 veces, una de ellas con alguien caminando por la casa."],
+ tip:"En silencio y con calma. Si lo felicitás con entusiasmo, lo activás.",src:"Sophia Yin, «Learn to Earn» / Kikopup"},
+olfato:{cat:"calma",t:"Búsqueda de premios",min:5,why:"Olfatear baja el ritmo cardíaco y cansa la mente. Es tu herramienta de emergencia cuando está pasado de vueltas.",
+ steps:["Decí «¡busca!» y tirá un puñado de premios pequeños en el pasto o una alfombra.","Dejalo buscar sin ayudarlo.","Cuando termine, otro puñado. Hacé 3 rondas."],
+ lv:["3 rondas en casa.","3 rondas en el patio, o con una toalla enrollada con premios dentro."],
+ tip:"Usalo justo antes de que lleguen visitas y al empezar el paseo.",src:"Trabajo de olfato (nosework)"},
+onoff:{cat:"calma",t:"Jugá y pausá",min:5,why:"Tu perro sabe acelerarse pero no frenar. Este juego le enseña a pasar de la euforia a la calma en segundos.",
+ steps:["Jugá con un juguete 10 segundos con energía.","Pará de golpe: quieto, juguete contra tu pecho, mirando hacia otro lado.","Esperá a que se calme (se sienta, se echa o deja de saltar).","«¡Sí!» y la recompensa es volver a jugar.","Hacé 8 a 10 ciclos y terminá con una búsqueda de premios."],
+ lv:["Pausas de 3 segundos de calma.","Pausas de 10 segundos.","En cada pausa pedí «a tu manta»."],
+ tip:"La recompensa por calmarse es más juego. Así aprende que la calma abre la puerta a la diversión.",src:"Susan Garrett / Kikopup, «interruptor on-off»"},
+masticar:{cat:"calma",t:"Kong de calma",min:20,why:"Lamer y masticar lo calma solo. Si el Kong aparece únicamente en su manta, esa manta se convierte en el mejor lugar de la casa.",
+ steps:["Rellená un Kong o juguete similar con su comida mojada o yogur natural y congelalo.","Dáselo solo en su manta.","Quedate cerca haciendo otra cosa mientras lo disfruta."],
+ lv:["20 minutos de relax en casa.","Durante la cena familiar.","Mientras hay visitas."],
+ tip:"Prepará 3 o 4 de una vez y dejalos en el freezer.",src:"Manejo del ambiente, Ian Dunbar"},
+manta1:{cat:"calma",t:"A tu manta",min:5,why:"La manta será su lugar seguro cuando haya visitas. Primero tiene que amarla.",
+ steps:["Poné una manta o cama en el suelo.","Premiá cuando la mire, después cuando la pise, después cuando tenga 4 patas encima.","Tirá el premio lejos de la manta para que vuelva a subir solo.","Cuando suba de forma fiable, decí «a tu manta» justo antes."],
+ lv:["Premiá mirar y pisar la manta.","Premiá 4 patas encima.","Agrega la señal «a tu manta»."],
+ tip:"Sesiones de 3 a 5 minutos. Mejor dos cortas que una larga.",src:"Kikopup, «go to mat» / Leslie McDevitt"},
+manta2:{cat:"calma",t:"A tu manta: quedarse",min:5,why:"Ahora agregamos duración. Mientras siga echado, gana premios.",
+ steps:["Mandalo a la manta y esperá que se eche.","Premio entre las patas cada 3 segundos.","Alargá poco a poco a 5, 8 y 12 segundos.","Liberalo con «¡libre!» y tirá un premio fuera de la manta."],
+ lv:["30 segundos en total.","1 minuto.","2 minutos con premios cada 15 segundos."],
+ tip:"Si se levanta, subiste muy rápido. Volvé al nivel anterior sin enojarte.",src:"Dra. Karen Overall, Protocolo de relajación"},
+manta3:{cat:"calma",t:"Manta con distracciones",min:5,why:"Las visitas traen ruido, movimiento y emoción. Lo entrenamos de a poco.",
+ steps:["Con él en la manta, hacé una distracción pequeña: un paso atrás, un aplauso, abrir un cajón.","Si se queda: «¡Sí!» y premio en la manta.","Subí la dificultad: caminar a la puerta, tocarla, abrirla.","Si se levanta, volvé a una distracción más fácil."],
+ lv:["Pasos, aplausos y sentarte en el sillón.","Caminar hasta la puerta y tocarla.","Abrir y cerrar la puerta de entrada.","Alguien de la familia entra hablando fuerte."],
+ tip:"Una distracción, un premio. Avanzá en orden de dificultad.",src:"Dra. Karen Overall, Protocolo de relajación"},
+relax:{cat:"calma",t:"Protocolo de relajación",min:10,why:"Versión breve del famoso protocolo de 15 días: relajarse mientras pasan cosas alrededor paga muy bien.",
+ steps:["Perro echado en la manta.","Hacé una tarea, volvé a su lado y premiá. Tareas: 5 s quieto, 1 paso atrás, 10 s, 2 pasos, aplauso suave, sentarte, caminar a la puerta.","Premiá después de cada tarea si sigue echado.","Terminá con «¡libre!»."],
+ lv:["Tareas de 5 a 10 segundos cerca de él.","Tareas alejándote hasta 3 metros.","Tareas fuera de su vista unos segundos."],
+ tip:"Si suspira o apoya la cadera de lado, se está relajando de verdad.",src:"Dra. Karen Overall"},
+yerchoice:{cat:"autocontrol",t:"Es tu elección",min:4,why:"Autocontrol puro: aprende que alejarse de lo que desea es lo que le consigue lo que desea.",
+ steps:["Poné 5 premios en tu mano cerrada a la altura de su nariz.","Dejá que lama y empuje. No digas nada.","En cuanto se aleje un poco: «¡Sí!» y premio de tu otra mano.","Cuando ya no se acerque, abrí la mano un poco. Si va a buscar, cerrala.","Meta: mano abierta con premios y él no la toca."],
+ lv:["Mano cerrada.","Mano abierta.","Mano abierta apoyada en el suelo.","Premios sueltos en el suelo y vos de pie."],
+ tip:"No digas «no» ni «dejalo». Tiene que descubrirlo solo.",src:"Susan Garrett, «It's Yer Choice»"},
+espera:{cat:"autocontrol",t:"Esperá en la puerta",min:4,why:"Salir disparado por la puerta empieza el paseo con el perro pasado de vueltas.",
+ steps:["Con la correa puesta, poné la mano en el picaporte.","Abrí un poco. Si se lanza, cerrá con suavidad.","Si se queda quieto, seguí abriendo.","Con la puerta abierta y él quieto, decí «¡libre!» y salgan."],
+ lv:["Puerta de una habitación.","Puerta de casa.","Portón o puerta del auto."],
+ tip:"No hace falta pedir «sentado». Dejá que aprenda que la calma abre la puerta.",src:"Susan Garrett, «Crate Games» / Kikopup"},
+platocomida:{cat:"autocontrol",t:"El plato baja con calma",min:3,why:"Dos veces al día tenés una sesión de entrenamiento gratis.",
+ steps:["Con el plato en la mano, esperá.","Si salta, el plato sube. Si está quieto, el plato baja.","Cuando el plato toca el suelo y él espera, decí «¡libre!»."],
+ lv:["Plato a mitad de camino.","Plato en el suelo con 2 segundos de espera."],
+ tip:"La calma hace que pasen cosas buenas. Ese es el mensaje de toda esta semana.",src:"Ian Dunbar, «Learn to Earn»"},
+dejalo:{cat:"autocontrol",t:"Dejalo",min:5,why:"Útil en el paseo y con la comida de las visitas.",
+ steps:["Premio en el suelo cubierto con tu pie.","Cuando deje de intentar: «¡Sí!» y premio de tu mano, nunca el del suelo.","Decí «dejalo» justo antes de poner el premio en el suelo.","Destapalo poco a poco."],
+ lv:["Premio bajo el pie.","Premio a la vista, pie cerca.","Pasar caminando con correa junto a un premio en el suelo."],
+ tip:"El premio del suelo nunca es para él. El bueno siempre viene de vos.",src:"Kikopup / Zak George"},
+arnes:{cat:"correa",t:"Salida tranquila",min:5,why:"Si el paseo empieza con euforia, la correa va tirante desde el primer paso.",
+ steps:["Tomá la correa. Si salta, dejala y sentate 30 segundos.","Ponésela solo cuando esté calmado.","Andá a la puerta. Si se lanza, vuelvan atrás.","Antes de caminar, hacé 1 minuto de búsqueda de premios en la vereda."],
+ lv:["Practicá ponerle la correa sin salir.","Salí hasta la vereda y volvé a entrar.","Salida completa con calma."],
+ tip:"Un arnés con anilla en el pecho reduce el tirón sin causar dolor.",src:"Grisha Stewart / Patricia McConnell"},
+semaforo:{cat:"correa",t:"Semáforo",min:10,why:"Tirar funciona porque lo lleva adonde quiere. Si tirar detiene el paseo, deja de tener sentido.",
+ steps:["Caminá. Si la correa se tensa, te parás como un árbol.","No tires hacia atrás. Esperá.","Cuando la correa se afloje (se da vuelta o retrocede un paso): «¡Sí!», premio junto a tu pierna y seguís.","Repetí. Al principio vas a avanzar muy poco, y está bien."],
+ lv:["En el patio o un pasillo.","En una cuadra tranquila.","En el paseo completo.","En la cuadra del parque."],
+ tip:"La consistencia lo es todo. Si a veces lo dejás tirar, aprende que tirar a veces funciona.",src:"Ian Dunbar / Zak George"},
+zona:{cat:"correa",t:"La zona de premio",min:10,why:"Le mostrás exactamente dónde se ganan los premios: junto a tu pierna.",
+ steps:["Elegí un lado (izquierdo o derecho) y mantenelo siempre.","Dale los premios a la altura de la costura de tu pantalón.","Empezá con un premio cada 2 pasos, luego cada 5, luego cada 10.","Si se adelanta, volvé a premiar más seguido."],
+ lv:["Un premio cada 2 pasos, 20 premios.","Cada 5 pasos.","Cada 10 pasos, con giros."],
+ tip:"El premio va a tu costura, nunca delante tuyo. Así la correa queda floja.",src:"Kikopup, «loose leash walking»"},
+giros:{cat:"correa",t:"Cambios de dirección",min:5,why:"Aprende a estar pendiente de vos porque podés cambiar de rumbo en cualquier momento.",
+ steps:["Caminando, antes de que la correa se tense, decí «¡vamos!» con alegría y girá 180°.","Cuando te alcance: «¡Sí!» y premio en la zona.","Hacelo de forma impredecible."],
+ lv:["10 giros en una cuadra.","10 giros con alguien caminando cerca.","Giros cuando ve a otro perro a lo lejos."],
+ tip:"Es un juego, no un castigo. Voz alegre y nada de tirones.",src:"Patricia McConnell"},
+primeros5:{cat:"correa",t:"Los primeros 5 minutos",min:5,why:"Casi todos los perros tiran más al inicio. Bajar las revoluciones al salir cambia el paseo entero.",
+ steps:["Salí de casa y quedate en la vereda.","Hacé 1 o 2 minutos de búsqueda de premios.","Luego 2 minutos de semáforo muy estricto.","Recién después seguí con el paseo normal."],
+ lv:["Rutina completa.","Rutina con solo 1 minuto de búsqueda."],
+ tip:"No es tiempo perdido: es lo que hace agradable el resto del paseo.",src:"Grisha Stewart"},
+olfatoPaseo:{cat:"correa",t:"Paseo de olfato",min:15,why:"Un perro con sus necesidades cubiertas tiene menos energía para ser intenso. 15 minutos olfateando cansan como una hora caminando.",
+ steps:["Usá una correa larga (3 a 5 m) en un lugar seguro.","Dejá que él elija el ritmo y qué oler.","Si te mira, premio.","No le pidas nada más."],
+ lv:["15 minutos.","20 minutos en un lugar nuevo."],
+ tip:"Hacelo al menos 3 veces por semana. Es su descompresión.",src:"Sarah Stremming, «paseos de descompresión»"},
+timbre1:{cat:"visitas",t:"Neutraliza el timbre",min:5,why:"Hoy el timbre significa «¡FIESTA!». Lo vamos a cambiar a «aparece comida en el suelo».",
+ steps:["Pedí a alguien que toque el timbre, o usá una grabación en el celular a volumen bajo.","Al sonar, tirá un premio al suelo lejos de la puerta.","Repetí 10 a 15 veces sin abrir la puerta.","Subí el volumen poco a poco."],
+ lv:["Grabación a volumen bajo.","Grabación a volumen normal.","Timbre real tocado por alguien de la familia."],
+ tip:"Si ladra y no come, el volumen está muy alto. Bajalo.",src:"Desensibilización y contracondicionamiento"},
+timbre2:{cat:"visitas",t:"Timbre = a tu manta",min:5,why:"El timbre pasa a ser la señal de ir a la manta, donde pasan cosas buenas.",
+ steps:["Tocá el timbre o poné la grabación.","Decí «a tu manta» y acompañalo si hace falta.","Cuando llega y se echa: premio en la manta.","Practicá hasta que vaya solo al oír el timbre."],
+ lv:["Acompañándolo a la manta.","Señal dada desde la puerta.","Sin señal: el timbre es la señal."],
+ tip:"Poné la manta con vista a la puerta, pero a varios metros de ella.",src:"Leslie McDevitt / Kikopup"},
+cuatropatas:{cat:"visitas",t:"Cuatro patas en el suelo",min:5,why:"Si saltar le da atención, salta. Si tener las 4 patas en el suelo le da atención, hará eso.",
+ steps:["Salí y entrá a casa como si fueras una visita.","Si salta: date vuelta en silencio y volvé a salir.","Si tiene las 4 patas en el suelo: atención tranquila y premio en el suelo, nunca a la altura de tu cara.","Repetí 10 entradas."],
+ lv:["Vos hacés de visita.","Otra persona de la casa hace de visita.","Entradas con más energía y voz alegre."],
+ tip:"Tirar el premio al suelo mantiene su cabeza abajo, y sus patas también.",src:"Ian Dunbar / Sophia Yin"},
+visitafalsa:{cat:"visitas",t:"Visita de práctica",min:10,why:"Es casi imposible entrenar en una visita real si nunca practicaste con una de mentira.",
+ steps:["Pedí a un amigo o vecino que te ayude 10 minutos.","Perro con correa dentro de casa, cerca de su manta.","La visita entra, te saluda a vos e ignora al perro.","Premiá calma y manta cada pocos segundos.","Tras 2 minutos de calma, la visita se va. Repetí la entrada 2 o 3 veces."],
+ lv:["Entrada con correa y premios seguidos.","La visita se sienta 5 minutos.","La visita se levanta y camina por la casa."],
+ tip:"Cuantas más visitas de práctica, más aburridas se vuelven. Esa es la meta.",src:"Patricia McConnell, «The Other End of the Leash»"},
+saludo:{cat:"visitas",t:"Saludar es el premio",min:5,why:"Tu perro quiere la atención de las visitas: úsala como recompensa en vez de pelear contra ella.",
+ steps:["Con la visita sentada, dejá que se acerque con la correa floja.","Si se sienta o mantiene las 4 patas en el suelo: la visita lo acaricia suave 3 segundos.","Si salta: la visita se levanta y se aleja un paso.","Después de 3 saludos, «a tu manta» y Kong."],
+ lv:["Una visita de práctica.","Dos personas.","Una visita que habla con tono alegre."],
+ tip:"Pedí a las visitas que acaricien el pecho, no la cabeza, y que hablen con voz tranquila.",src:"Principio de Premack"},
+visitareal:{cat:"visitas",t:"Visita real con plan",min:15,why:"El examen de verdad. La clave es tener el plan claro antes de abrir la puerta.",
+ steps:["Antes de la visita: paseo de olfato o búsqueda de premios.","Correa puesta y Kong preparado.","Timbre: «a tu manta» y premios.","La visita entra e ignora al perro 5 minutos.","Si está tranquilo: saludo corto de 3 segundos.","Después, manta y Kong. Soltalo cuando la visita esté sentada y relajada."],
+ lv:["Visita de 15 minutos.","Visita de 30 minutos.","Visita de 1 hora, perro suelto al final.","Varias visitas a la vez."],
+ tip:"Si se pone muy intenso, no es un fracaso: llevalo a otra habitación con un Kong. Gestionar también es entrenar.",src:"Integración del programa"},
+ll1:{cat:"llamada",t:"Una palabra de llamada nueva",min:3,why:"Si «¡ven!» ya fue ignorada mil veces, perdió su valor. Empezamos de cero con una señal limpia.",
+ steps:["Elegí una palabra nueva o un silbato (por ejemplo «¡Aquí!»).","Con el perro a tu lado, decí la palabra y dale 3 premios del máximo valor, uno tras otro, con fiesta.","Repetí 10 veces durante el día.","Todavía no lo llames desde lejos."],
+ lv:["10 cargas a su lado.","10 cargas a 1 metro."],
+ tip:"Esta palabra nunca puede anunciar algo malo: baño, irse del parque, reto.",src:"Leslie Nelson, «Really Reliable Recall»"},
+ll2:{cat:"llamada",t:"Ping-pong en casa",min:5,why:"Llamadas entre dos personas: le encanta y suma muchas llamadas exitosas.",
+ steps:["Dos personas en extremos de la casa, con premios.","Una llama con la palabra nueva. Al llegar: fiesta y premio.","Llama la otra, y así sucesivamente.","Aumentá la distancia y llamá desde otra habitación."],
+ lv:["Misma habitación.","Habitaciones distintas.","Del patio a la casa."],
+ tip:"Terminá antes de que se aburra. 8 a 10 llamadas son suficientes.",src:"Juego clásico de llamada"},
+ll3:{cat:"llamada",t:"Llama y huye",min:5,why:"A los perros les encanta perseguir. Si al llamarlo corrés hacia el otro lado, viene volando.",
+ steps:["Llamalo con la palabra.","Enseguida corré unos pasos alejándote, aplaudiendo.","Cuando te alcance: premio y juego con un juguete.","Repetí 5 veces."],
+ lv:["En el patio.","En un lugar cerrado nuevo."],
+ tip:"Nunca lo persigas vos: él te persigue a vos.",src:"Susan Garrett, «Recallers»"},
+ll4:{cat:"llamada",t:"Toque de collar",min:3,why:"Muchos perros vienen pero esquivan la mano. Tocar el collar tiene que ser algo bueno.",
+ steps:["Cuando llegue, tomá suavemente el collar.","Dale el premio mientras lo sostenés.","Soltá y decí «¡libre!»."],
+ lv:["10 repeticiones en casa.","Incluilo en cada llamada."],
+ tip:"Así podés agarrarlo sin que sienta que el juego terminó.",src:"Leslie Nelson"},
+ll5:{cat:"llamada",t:"Llamada con línea larga",min:10,why:"Afuera necesita practicar con red de seguridad. La línea larga evita que aprenda que puede ignorarte.",
+ steps:["Línea de 5 a 10 m en un parque o lugar abierto.","Dejá que explore.","Llamalo cuando NO esté distraído (oliendo poco o mirándote).","Jackpot y liberalo de nuevo."],
+ lv:["5 llamadas sin distracción.","5 llamadas mientras olfatea.","Llamadas con gente a lo lejos."],
+ tip:"Si no viene, recogé la línea sin repetir la palabra y bajá el nivel. Llamar dos veces le enseña que la primera no cuenta.",src:"Leslie Nelson / Zak George"},
+ll6:{cat:"llamada",t:"Ven y vuelve a jugar",min:10,why:"Si la llamada siempre termina la diversión, aprende a no venir. Hoy la llamada devuelve la diversión.",
+ steps:["En el parque, con la línea larga.","Llamalo, premio y toque de collar.","«¡Libre!» y vuelve a explorar.","De 10 llamadas, solo la última termina el paseo."],
+ lv:["5 llamadas con liberación.","8 llamadas, una con un perro a lo lejos."],
+ tip:"Para irse del parque: llamalo, premialo y hagan algo divertido antes de salir.",src:"Susan Garrett, «Recallers»"},
+ll7:{cat:"llamada",t:"Llamada con distracciones",min:10,why:"Subimos el nivel con la línea larga: juguetes, comida, personas y perros.",
+ steps:["Elegí una distracción de tu escala (1 = hojas, 5 = perros jugando).","Llamalo desde una distancia a la que sabés que vendrá.","Jackpot. Repetí 5 veces y subí un nivel si fue fácil."],
+ lv:["Nivel 1-2: hojas, persona caminando.","Nivel 3: alguien con comida o un juguete.","Nivel 4: perro caminando a lo lejos.","Nivel 5: perros jugando a 20 m."],
+ tip:"Regla del 80%: si acierta 4 de 5, subí un nivel. Si no, bajá uno.",src:"Leslie Nelson / Ian Dunbar"},
+umbral:{cat:"perros",t:"Encuentra su distancia",min:10,why:"Cada perro tiene una distancia a la que puede ver a otros perros y seguir pensando. Ahí es donde aprende.",
+ steps:["Andá a un lugar donde pasen perros a lo lejos, por ejemplo afuera de un parque.","Observá a qué distancia sigue comiendo y mirándote.","Si no come o tira con fuerza, alejate.","Anotá esa distancia en metros."],
+ lv:["Encontrala y anotala.","Comprobá si se redujo."],
+ tip:"Si no come, está pasado de umbral: alejate. No es desobediencia.",src:"Grisha Stewart, BAT"},
+lat:{cat:"perros",t:"Mirá eso",min:10,why:"Le enseñás a ver a otro perro y mirarte a vos en vez de explotar de alegría.",
+ steps:["Ubicate a su distancia de umbral.","Cuando mire al otro perro: «¡Sí!» y premio.","Repetí. Pronto verá al perro y girará hacia vos esperando el premio.","Eso es exactamente lo que buscamos."],
+ lv:["Distancia cómoda (unos 30 m).","5 m más cerca.","10 m más cerca."],
+ tip:"Marcá el instante en que mira al otro perro. No esperes que haga nada más.",src:"Leslie McDevitt, «Control Unleashed»"},
+"123":{cat:"perros",t:"Juego del 1-2-3",min:5,why:"Un ritmo predecible lo ayuda a pasar cerca de perros sin perder la cabeza.",
+ steps:["Caminando, contá en voz alta «1, 2, 3».","En el 3, premio junto a tu pierna.","Practicá primero sin distracciones.","Luego usalo para pasar junto a un perro."],
+ lv:["Sin distracciones.","Pasar a 20 m de un perro.","Pasar a 10 m."],
+ tip:"El ritmo mantiene su cabeza ocupada esperando el 3.",src:"Leslie McDevitt, «Pattern Games»"},
+paralela:{cat:"perros",t:"Paseo en paralelo",min:15,why:"Caminar cerca de otro perro sin interactuar le enseña que no todos los perros son para jugar.",
+ steps:["Con un amigo y su perro tranquilo.","Caminen en paralelo a 10-15 m, por veredas opuestas.","Premiá cada mirada al otro perro y cada vez que te mire a vos.","Si va bien, acérquense poco a poco.","Terminá con un saludo de 3 segundos o sin saludo."],
+ lv:["15 m de distancia.","5 m.","Caminar juntos a 2 m."],
+ tip:"Los perros muy sociables se calman con paseos paralelos: cercanía sin presión.",src:"Grisha Stewart / Patricia McConnell"},
+permiso:{cat:"perros",t:"Saludar con permiso",min:10,why:"Aprende que el camino para jugar con otro perro pasa por vos.",
+ steps:["Buscá un perro que quiera jugar (preguntá al dueño).","Esperá a que tu perro te mire.","Cuando lo haga: «¡andá a saludar!» y lo soltás o se acercan.","Tras unos segundos, llamalo con alegría y premialo."],
+ lv:["Con un perro conocido.","Con un perro nuevo.","Suelto, con perros jugando."],
+ tip:"Si nunca te mira, están demasiado cerca. Aléjense unos metros.",src:"Principio de Premack"},
+"3seg":{cat:"perros",t:"Regla de los 3 segundos",min:5,why:"Los saludos con correa largos terminan en enredos o tensión. 3 segundos es el saludo educado entre perros.",
+ steps:["En un saludo con correa floja, contá «1, 2, 3».","Decí «¡vamos!» con alegría y alejate.","Premiá que te siga.","Si los dos perros siguen relajados, pueden repetir."],
+ lv:["Saludo con un perro conocido.","Saludos con perros del paseo."],
+ tip:"Mantené la correa floja durante el saludo: la tensión viaja por la correa.",src:"Sophia Yin / Patricia McConnell"},
+leerperros:{cat:"perros",t:"Lee el lenguaje canino",min:10,why:"Para soltarlo solo cuando el otro perro quiere jugar, tenés que saber leer las señales.",
+ steps:["Mirá perros jugando, en video o en el parque.","Juego sano: reverencia, cuerpos flojos y curvos, cambio de roles (uno persigue y luego el otro), pausas.","Señales de «basta»: girar la cabeza, lamerse, cuerpo rígido, cola baja, buscar a su dueño, esconderse.","Prueba de consentimiento: separá a los perros. Si el otro vuelve, quiere jugar. Si se va, no."],
+ lv:["Observá 10 minutos.","Aplicá la prueba de consentimiento en vivo."],
+ tip:"Tu perro no es malo, es intenso. Respetar el «no» de otros perros es su lección más importante.",src:"Patricia McConnell / Turid Rugaas"},
+interrumpe:{cat:"perros",t:"Interrumpe el juego",min:10,why:"Pausas frecuentes evitan que el juego suba de intensidad y entrenan la llamada en el momento más difícil.",
+ steps:["Con un perro amigo, jugando.","Cada 30 a 60 segundos, llamalo.","Jackpot y «¡libre!»: vuelve a jugar.","Si no viene, acercate, tocá el collar y aléjense 5 pasos antes de soltarlo."],
+ lv:["Juego tranquilo, con línea larga.","Juego normal.","Juego intenso, suelto."],
+ tip:"Volver a jugar es la mejor recompensa que tenés. Usala.",src:"Susan Garrett / Ian Dunbar"},
+arrastre:{cat:"libertad",t:"Línea larga arrastrando",min:15,why:"El paso intermedio entre la correa y la libertad. Él se siente suelto, pero si no vuelve podés pisar la línea y evitar que aprenda a ignorarte.",
+ steps:["Usá una línea de 10 m enganchada al arnés, nunca al collar.","Soltala y dejala arrastrar mientras explora.","Cada vez que te mire o se acerque por su cuenta: premio.","Si se aleja demasiado o no responde, pisá la línea, acercate y volvé a empezar más cerca."],
+ lv:["Parque cerrado o lugar sin tránsito.","Lugar abierto con poca gente.","Playa, río o sendero, con distracciones a lo lejos."],
+ tip:"Usá guantes si vas a frenar la línea en movimiento, y nunca te la enrolles en la mano.",src:"Leslie Nelson / Zak George"},
+escondidas:{cat:"libertad",t:"Juego de escondidas",min:10,why:"Si te pierde de vista y le preocupa, aprende a vigilarte solo. Es la mejor manera de que esté pendiente de dónde estás.",
+ steps:["En un lugar seguro, cuando esté distraído oliendo, escondete detrás de un árbol o un auto.","No lo llames. Esperá a que te busque.","Cuando te encuentre: fiesta, jackpot y juego.","Si tarda mucho, hacé un ruidito suave."],
+ lv:["Escondites fáciles, a pocos metros.","Escondites a 15 m.","En una salida a la playa o al río, con la línea arrastrando."],
+ tip:"Hacelo seguido y por sorpresa. Pronto vas a notar que te mira mucho más.",src:"Juego clásico, usado por Susan Garrett y Zak George"},
+radio:{cat:"libertad",t:"Radio invisible",min:15,why:"Le enseñás una distancia máxima: puede explorar, pero dentro de un círculo alrededor tuyo.",
+ steps:["Con la línea larga, caminá por un lugar abierto.","Cada vez que vuelva hacia vos o te mire estando cerca (a menos de 15 m): premio.","Cuando esté por pasar el límite, sin decir nada, cambiá de dirección.","Cuando te alcance: premio y «¡libre!» para que siga explorando."],
+ lv:["Radio de 10 m con la línea en la mano.","Radio de 15 m con la línea arrastrando.","Radio de 20 m, suelto en un lugar seguro."],
+ tip:"Premiá los regresos espontáneos con lo mejor que tengas: son la base de un perro suelto confiable.",src:"Susan Garrett / Grisha Stewart"},
+silbato:{cat:"libertad",t:"Silbato de emergencia",min:5,why:"Una llamada que nunca falló. El silbato suena igual aunque estés nervioso, y se oye de lejos aunque haya viento o ruido de agua.",
+ steps:["Elegí un patrón, por ejemplo tres pitidos cortos.","Con el perro a tu lado, tocá el silbato y dale el mejor premio que exista, varios seguidos.","Repetí 5 veces por día durante una semana antes de usarlo a distancia.","Después, usalo solo cuando sepas que va a venir."],
+ lv:["Carga a su lado, 5 veces.","A 5 m, dentro de casa.","Afuera, con la línea larga.","En salidas sueltos, como llamada principal."],
+ tip:"Nunca lo uses para algo que no le guste. Es tu red de seguridad: cuidala.",src:"Leslie Nelson, «Really Reliable Recall»"},
+quietoDist:{cat:"libertad",t:"Echado a distancia",min:10,why:"Frenarlo de golpe a la distancia le puede salvar la vida si va hacia una calle, una bici o un perro que no quiere jugar.",
+ steps:["Enseñale «¡abajo!» (echado) a tu lado, con el premio en el suelo.","Pedíselo desde un paso más lejos, después 2, después 5.","Cuando se eche, andá vos hasta él a darle el premio.","Más adelante, pedíselo mientras camina o trota."],
+ lv:["A tu lado.","A 2 metros.","A 5 metros.","Mientras trota hacia algo."],
+ tip:"El premio va hacia él: no lo llames para dárselo. Así aprende a quedarse donde está.",src:"Ian Dunbar / «emergency down» de adiestradores de rescate"},
+cordon:{cat:"libertad",t:"Frena en el cordón",min:10,why:"Si alguna vez anda suelto cerca de una calle, frenar en el cordón tiene que ser automático.",
+ steps:["Con correa, en cada esquina, frená antes del cordón.","Esperá a que se siente o se quede quieto, sin pedírselo.","Premio y «¡libre!» para cruzar.","Con el tiempo va a frenar solo al llegar al borde."],
+ lv:["En todas las esquinas de un paseo.","Que frene antes que vos.","Con la línea arrastrando, al salir de un sendero a la calle."],
+ tip:"Esto no reemplaza la correa en la ciudad. Es una red extra por si alguna vez se escapa.",src:"Ian Dunbar, manejo de seguridad"},
+pieSuelto:{cat:"libertad",t:"Al lado sin correa",min:10,why:"Para pasar junto a gente, bicis o por un sendero angosto sin tener que ponerle la correa.",
+ steps:["En un lugar cerrado, sacale la correa.","Decí «al lado» y caminá con premios en la zona de tu pierna, uno cada 2 pasos.","Hacé tramos cortos de 10 a 20 pasos y liberalo con «¡libre!».","Alargá los tramos de a poco."],
+ lv:["10 pasos en el patio.","20 pasos en un lugar cerrado.","Pasar junto a una persona o un ciclista."],
+ tip:"Tramos cortos y exitosos. «Al lado» siempre termina con «¡libre!»: nunca se desarma solo.",src:"Kikopup / Denise Fenzi"},
+animales:{cat:"libertad",t:"Distracciones al aire libre",min:15,why:"Suelto, el mundo compite con vos: gente corriendo, bicis, pájaros, gaviotas, otros perros, el agua. Cada distracción se entrena primero con red.",
+ steps:["Con la línea larga, ubicate a una distancia donde todavía pueda comer.","Juego «Mirá eso»: mira la distracción, «¡Sí!» y premio.","Si se queda fijo o sale disparado, alejate hasta que pueda volver a mirarte.","Cuando te mire solo, llamalo, jackpot y «¡libre!» para que vuelva a explorar."],
+ lv:["Gente y bicis a 30 m.","Pájaros, gaviotas o agua cerca.","Perros sueltos a lo lejos."],
+ tip:"Si sale corriendo hacia algo y lo logra, retrocede bastante. Por eso la línea larga va hasta que la llamada sea muy confiable.",src:"Leslie McDevitt / Simone Mueller"},
+flirt:{cat:"libertad",t:"Caña de juego",min:5,why:"Le das una salida permitida a las ganas de perseguir, con reglas: corre cuando vos decís y suelta cuando vos decís.",
+ steps:["Usá una caña con un juguete atado a una cuerda (flirt pole).","Pedile que espere. Decí «¡dale!» y mové el juguete para que lo persiga.","Dejá que lo atrape a veces.","Decí «soltá», cambiáselo por un premio y volvé a empezar."],
+ lv:["Esperar y soltar, dentro de casa.","En el patio, con más velocidad.","Antes de una salida."],
+ tip:"Sesiones de 3 a 5 minutos. Es intenso: no lo hagas con calor.",src:"Simone Mueller / Kikopup"},
+campo:{cat:"libertad",t:"Salida suelto",min:45,why:"El sueño: suelto, feliz y con vos. Se arma con todo lo que vienen practicando.",
+ steps:["Elegí un lugar seguro y lejos de calles: playa, río, sendero de montaña o un parque grande.","Los primeros 10 minutos, con la línea arrastrando: que olfatee y se descomprima.","Probá una llamada con el silbato. Si viene, sacale la línea.","Durante la salida: escondidas, llamadas de «ven y volvé a jugar» y premio por cada regreso espontáneo.","Si aparece un animal, gente o perros: llamalo antes de que él los vea."],
+ lv:["30 minutos con la línea arrastrando todo el tiempo.","10 minutos suelto dentro de la salida.","Salida completa suelto, con la línea en la mochila."],
+ tip:"Llevá siempre el silbato, los mejores premios y la línea. Ir suelto es un privilegio que se gana todos los días.",src:"Integración del programa"}
+};
+const UNITS = [
+ {t:"Bases y calma",d:"Marcador, nombre y una manta que ama.",test:"Va a su manta y juega con pausas sin descontrolarse."},
+ {t:"Autocontrol y salida",d:"La calma abre puertas. Literalmente.",test:"Sale de casa tranquilo y afloja la correa cuando te detenés."},
+ {t:"Correa y timbre",d:"El timbre deja de ser una fiesta.",test:"Suena el timbre y va a su manta, o al menos no corre a la puerta."},
+ {t:"Visitas y llamada",d:"Las visitas se vuelven aburridas. La llamada, irresistible.",test:"Recibe una visita sin saltar durante los primeros 5 minutos."},
+ {t:"Llamada afuera",d:"Línea larga, jackpots y primeros perros a lo lejos.",test:"Vuelve con la línea larga aunque haya distracciones leves."},
+ {t:"Otros perros",d:"El camino al juego pasa por vos.",test:"Te mira antes de ir a saludar y vuelve en pleno juego."},
+ {t:"Integración",d:"Juntamos todo en situaciones reales.",test:"Visita, paseo y parque con el plan completo."},
+ {t:"Vida real",d:"Pruebas de convivencia en el mundo real.",test:"Examen de convivencia: visita real, llamada en el parque y juego con pausas."},
+ {t:"Libertad con red",d:"Línea arrastrando y vos como centro de su mundo.",test:"Con la línea arrastrando, vuelve al silbato y se mantiene cerca.",adv:true},
+ {t:"Suelto de verdad",d:"Lo que soñás: playa, río o montaña, suelto y con vos.",test:"Examen de libertad: una salida completa suelto, volviendo cada vez que lo llamás.",adv:true}
+];
+const PLAN = [
+ ["marcador","nombre","capturar"],["marcador","premios","manta1"],["nombre","manta1","olfato"],["miradas","manta1","yerchoice"],["manta1","yerchoice","capturar"],["manta2","yerchoice","onoff"],["manta2","onoff","miradas"],
+ ["manta2","espera","platocomida"],["relax","onoff","arnes"],["relax","arnes","semaforo"],["semaforo","zona","manta2"],["semaforo","zona","primeros5"],["giros","relax","onoff"],["arnes","semaforo","giros"],
+ ["timbre1","zona","olfatoPaseo"],["timbre1","manta3","giros"],["timbre1","manta3","semaforo"],["timbre2","manta3","primeros5"],["timbre2","dejalo","olfatoPaseo"],["timbre2","cuatropatas","masticar"],["timbre2","cuatropatas","semaforo"],
+ ["cuatropatas","ll1","masticar"],["visitafalsa","ll1","onoff"],["visitafalsa","ll2","dejalo"],["saludo","ll2","ll4"],["saludo","ll3","ll4"],["visitafalsa","ll3","relax"],["visitareal","ll2","ll3"],
+ ["ll5","leerperros","zona"],["ll5","umbral","primeros5"],["ll6","umbral","lat"],["ll5","lat","123"],["ll6","lat","visitafalsa"],["ll7","123","olfatoPaseo"],["ll7","lat","saludo"],
+ ["lat","123","ll6"],["paralela","3seg","manta3"],["paralela","permiso","ll7"],["permiso","3seg","giros"],["interrumpe","permiso","visitareal"],["paralela","interrumpe","ll7"],["permiso","interrumpe","lat"],
+ ["visitareal","ll7","semaforo"],["interrumpe","onoff","manta3"],["paralela","3seg","primeros5"],["visitareal","saludo","masticar"],["ll7","permiso","olfatoPaseo"],["interrumpe","ll6","relax"],["visitareal","ll7","permiso"],
+ ["visitareal","interrumpe","semaforo"],["ll7","paralela","zona"],["visitareal","permiso","giros"],["interrumpe","3seg","ll6"],["visitareal","onoff","ll7"],["permiso","interrumpe","olfatoPaseo"],["visitareal","ll7","interrumpe"],
+ ["arrastre","escondidas","silbato"],["arrastre","radio","silbato"],["escondidas","quietoDist","cordon"],["radio","quietoDist","flirt"],["arrastre","pieSuelto","cordon"],["animales","flirt","silbato"],["arrastre","radio","quietoDist"],
+ ["escondidas","animales","quietoDist"],["campo","radio","silbato"],["pieSuelto","cordon","interrumpe"],["campo","animales","flirt"],["campo","quietoDist","escondidas"],["radio","pieSuelto","ll7"],["campo","silbato","animales"]
+];
+const LEVEL = PLAN.map((ids,di)=>ids.map(id=>Math.min(PLAN.slice(0,di).filter(d=>d.includes(id)).length, EX[id].lv.length-1)));
+const GOALS = [
+ {id:"visitas",t:"Tranquilo con las visitas",cats:["visitas","calma"],lo:"Imposible",hi:"Se queda en su manta"},
+ {id:"llamada",t:"Viene cuando lo llamo",cats:["llamada"],lo:"Ni me mira",hi:"Viene de inmediato"},
+ {id:"perros",t:"Educado con otros perros",cats:["perros"],lo:"Se lanza a todos",hi:"Me pide permiso"},
+ {id:"correa",t:"Pasea sin tirar",cats:["correa","autocontrol"],lo:"Me arrastra",hi:"Correa floja"},
+ {id:"libertad",t:"Suelto conmigo",cats:["libertad"],lo:"Ni pensarlo",hi:"Suelto y atento"}
+];
+const PRINCIPLES = [
+ ["Premiá lo que querés ver","Es más rápido enseñarle qué hacer que castigar lo que no. Todos los adiestradores modernos coinciden en esto."],
+ ["Sesiones cortas","3 a 5 minutos, varias veces al día. Terminá siempre con un acierto."],
+ ["Una señal, una vez","Si repetís «ven, ven, ven», le enseñás que la primera no cuenta."],
+ ["Respeta el umbral","Si no come premios, está demasiado emocionado para aprender. Alejate o bajá la dificultad."],
+ ["Gestiona el ambiente","Mientras entrenás, evitá que practique el error: correa en casa con visitas, línea larga en el parque."],
+ ["Cansa la mente, no solo el cuerpo","Olfato, juegos de búsqueda y masticar calman más que correr detrás de una pelota."],
+ ["Toda la familia igual","Si una persona lo deja saltar, el perro aprende que saltar a veces funciona."],
+ ["El perro siempre está aprendiendo","Cada interacción cuenta, no solo los minutos de entrenamiento."]
+];
+
+/* ---------- Tema ---------- */
+let theme = "auto";
+try{ theme = localStorage.getItem("patitas-theme") || "auto"; }catch(e){}
+const darkMQ = window.matchMedia("(prefers-color-scheme: dark)");
+const isDark = () => theme==="dark" || (theme==="auto" && darkMQ.matches);
+function applyTheme(){
+  if(theme==="auto") document.documentElement.removeAttribute("data-theme");
+  else document.documentElement.setAttribute("data-theme", theme);
+  const m = document.querySelector('meta[name="theme-color"]'); if(m) m.content = isDark() ? "#10151D" : "#EEF2F7";
+}
+function setTheme(t){ theme = t; try{ localStorage.setItem("patitas-theme", t); }catch(e){} applyTheme(); render(); }
+applyTheme();
+darkMQ.addEventListener?.("change", ()=>{ applyTheme(); render(); });
+
+/* ---------- Estado ---------- */
+const DEFAULT = {v:1,dog:"",done:{},wip:{},xp:0,streak:0,last:null,goals:{},updatedAt:0};
+let S = structuredClone(DEFAULT);
+try{ const raw = localStorage.getItem("patitas"); if(raw) S = Object.assign(structuredClone(DEFAULT), JSON.parse(raw)); }catch(e){}
+let view = {tab:"path", day:null, open:{}, celebrate:null, confirmReset:false};
+
+const dayKey = (d=new Date()) => d.toLocaleDateString("en-CA");
+const yesterday = () => { const d=new Date(); d.setDate(d.getDate()-1); return dayKey(d); };
+const streakNow = () => (S.last===dayKey()||S.last===yesterday()) ? S.streak : 0;
+const isDone = n => !!S.done[n];
+const isOpen = n => n===1 || isDone(n-1);
+const currentDay = () => { for(let i=1;i<=PLAN.length;i++) if(!isDone(i)) return i; return null; };
+const nm = () => S.dog.trim() || "tu perro";
+const esc = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const icon = (id,cls="") => `<svg viewBox="0 0 24 24" fill="currentColor" class="${cls}" aria-hidden="true"><use href="#${id}"/></svg>`;
+
+let dbRef=null, saving=false, pending=false;
+function save(){
+  S.updatedAt = Date.now();
+  try{ localStorage.setItem("patitas", JSON.stringify(S)); }catch(e){}
+  flush();
+}
+async function flush(){
+  if(!dbRef){ pending=true; return; }
+  if(saving){ pending=true; return; }
+  saving=true; pending=false;
+  try{ await dbRef.set(JSON.parse(JSON.stringify(S))); }catch(e){}
+  saving=false;
+  if(pending) flush();
+}
+(async()=>{
+  for(let i=0;i<30 && !window.claude?.use;i++) await new Promise(r=>setTimeout(r,100));
+  try{
+    const [db,user] = await Promise.all([window.claude?.use?.("db"), window.claude?.use?.("user")]);
+    if(!db||!user) return;
+    const id = await user.id(); if(!id) return;
+    const ref = db.collection("data/users/"+id).doc("progress");
+    const snap = await ref.get();
+    dbRef = ref;
+    const remote = snap.exists ? snap.data() : null;
+    if(remote && (remote.updatedAt||0) > (S.updatedAt||0)){
+      S = Object.assign(structuredClone(DEFAULT), JSON.parse(JSON.stringify(remote)));
+      try{ localStorage.setItem("patitas", JSON.stringify(S)); }catch(e){}
+      render();
+    } else if(S.updatedAt && (!remote || S.updatedAt > (remote.updatedAt||0))) flush();
+  }catch(e){}
+})();
+
+/* ---------- Vistas ---------- */
+const app = document.getElementById("app");
+
+function topBar(){
+  const st = streakNow();
+  return `<header class="top">
+    <button class="dogbtn" data-act="goprog" aria-label="Editar perfil"><span class="av">${icon("i-paw")}</span><b>${esc(nm())}</b></button>
+    <span class="stat fire ${st?"":"off"}" title="Racha de días">${icon("i-flame")}${st}</span>
+    <span class="stat xp" title="Huesos ganados">${icon("i-bone")}${S.xp}</span>
+    <button class="themebtn" data-act="toggletheme" aria-label="${isDark()?"Cambiar a modo claro":"Cambiar a modo nocturno"}">${icon(isDark()?"i-sun":"i-moon")}</button>
+  </header>`;
+}
+
+function renderPath(){
+  const cur = currentDay();
+  const doneToday = Object.values(S.done).some(d=>d.date===dayKey());
+  let h = topBar();
+  if(cur){
+    const u = UNITS[Math.floor((cur-1)/7)];
+    h += `<div class="today"><div class="t"><small>${doneToday?"Hoy ya cumpliste. Si querés, seguí":"Desafío de hoy"}</small><b>Día ${cur} · ${esc(u.t)}</b></div><button class="btn ${doneToday?"ghost":""}" data-day="${cur}">${doneToday?"Seguir":"Empezar"}</button></div>`;
+  } else {
+    h += `<div class="today"><div class="t"><small>Programa completo</small><b>${esc(nm())} terminó las 10 semanas</b></div></div>`;
+  }
+  UNITS.forEach((u,ui)=>{
+    const days = [...Array(7)].map((_,k)=>ui*7+k+1);
+    const unitDone = days.every(isDone);
+    if(u.adv && !UNITS[ui-1].adv) h += `<div class="adv">Nivel avanzado: libertad sin correa<small>Para cuando la llamada ya sea confiable</small></div>`;
+    h += `<section><div class="unit ${unitDone?"done":u.adv?"adv-u":""}"><div><div class="wk">Semana ${ui+1}</div><h2>${esc(u.t)}</h2><p>${esc(u.d)}</p></div></div><div class="nodes">`;
+    const off=[0,46,70,46,0,-46,-70];
+    days.forEach((n,k)=>{
+      const test = n%7===0, done=isDone(n), open=isOpen(n), c=n===cur;
+      const cls = ["node",test?"test":"",done?"done":open?"open":"",c?"cur":""].join(" ");
+      const inner = done?icon("i-check"):!open?icon("i-lock"):test?icon("i-trophy"):n;
+      h += `<button class="${cls}" style="transform:translateX(${off[k]}px)" data-day="${n}" ${open?"":"disabled"} aria-label="Día ${n}${test?" (prueba de la semana)":""}${done?", completado":open?"":", bloqueado"}">${c?`<span class="bubble">Hoy</span>`:""}${inner}</button>`;
+    });
+    h += `</div></section>`;
+  });
+  app.innerHTML = h;
+}
+
+function exCard(id, lvl, n){
+  const e = EX[id], r = n ? (S.done[n]?.r?.[id] || S.wip[n]?.[id]) : null;
+  const key = (n||"lib")+"-"+id, open = !!view.open[key];
+  let h = `<article class="card ${r?"r-"+r:""} ${open?"open":""}"><button class="chead" data-toggle="${key}" aria-expanded="${open}">
+    <span class="ic">${icon("c-"+e.cat)}</span><span class="tx"><h3>${esc(e.t)}</h3><small>${CATS[e.cat].t} · ${e.min} min${n!=null?` · Nivel ${lvl+1}`:""}</small></span>
+    ${r?`<span class="badge ${r}">${r==="ok"?"Logrado":r==="meh"?"Casi":"Repasar"}</span>`:""}${icon("i-chev","chev")}</button>`;
+  if(open){
+    h += `<div class="cbody"><p class="why">${esc(e.why)}</p>`;
+    if(n!=null) h += `<div class="lvl"><span>Meta de hoy</span>${esc(e.lv[lvl])}</div>`;
+    else h += `<div class="lvl"><span>Niveles</span>${e.lv.map((l,i)=>`${i+1}. ${esc(l)}`).join("<br>")}</div>`;
+    h += `<ol class="steps">${e.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol><p class="tip">${esc(e.tip)}</p><p class="src">Basado en: ${esc(e.src)}</p>`;
+    if(n!=null && !isDone(n)) h += `<div class="rate" role="group" aria-label="¿Cómo le fue?">${[["ok","Lo logró"],["meh","Más o menos"],["hard","Le costó"]].map(([v,l])=>`<button class="${v}" data-rate="${id}" data-v="${v}" aria-pressed="${r===v}">${l}</button>`).join("")}</div>`;
+    h += `</div>`;
+  }
+  return h + `</article>`;
+}
+
+function renderLesson(n){
+  const ids = PLAN[n-1], ui = Math.floor((n-1)/7), u = UNITS[ui], test = n%7===0, done = isDone(n);
+  const rated = ids.filter(id => done || S.wip[n]?.[id]).length;
+  let h = `<div class="lhead"><button class="back" data-act="home" aria-label="Volver al camino">${icon("i-back")}</button><div class="bar" aria-label="${rated} de 3"><i style="width:${rated/3*100}%"></i></div></div>
+  <div class="ltitle"><small>Semana ${ui+1} · ${esc(u.t)}</small><h1>${test?"Prueba de la semana":"Día "+n}</h1>${test?`<div class="goal">Objetivo: ${esc(u.test)}</div>`:""}</div>
+  <div class="cards">${ids.map((id,i)=>exCard(id, LEVEL[n-1][i], n)).join("")}</div><div class="lfoot">`;
+  if(done) h += `<p class="note">Completado el ${new Date(S.done[n].date+"T12:00").toLocaleDateString("es",{day:"numeric",month:"long"})}. Podés repetir estos ejercicios cuando quieras.</p><button class="btn ghost wide" data-act="home">Volver al camino</button>`;
+  else h += `<button class="btn ${test?"ball":""} wide" data-complete="${n}" ${rated<3?"disabled":""}>${rated<3?`Calificá los 3 desafíos (${rated}/3)`:"Completar día"}</button><p class="note">Abrí cada desafío, practicalo y contanos cómo le fue a ${esc(nm())}.</p>`;
+  app.innerHTML = h + `</div>`;
+}
+
+function renderCelebrate(){
+  const c = view.celebrate, hard = c.hard;
+  app.innerHTML = `<div class="cele"><div class="big">${icon(c.test?"i-trophy":"i-paw")}</div>
+    <h1>${c.test?"¡Semana superada!":"¡Día "+c.n+" completo!"}</h1>
+    <p>${hard?`Hubo ${hard===1?"un desafío difícil":hard+" desafíos difíciles"}. Repetilo mañana antes de la lección; lo vas a encontrar en Progreso.`:`${esc(nm())} lo hizo muy bien. Mañana sube un poquito la dificultad.`}</p>
+    <div class="chips"><span class="chip" style="color:var(--leash)">${icon("i-bone")}+${c.xp}</span><span class="chip" style="color:var(--meh)">${icon("i-flame")}${streakNow()} ${streakNow()===1?"día":"días"}</span></div>
+    <button class="btn wide" data-act="home">Continuar</button></div>`;
+}
+
+function renderLib(){
+  let h = topBar() + `<div class="sect"><h2>Principios</h2><p>Lo que repiten los mejores adiestradores del mundo, en ocho reglas.</p><div class="princ">${PRINCIPLES.map(([t,d])=>`<div><b>${esc(t)}</b><span>${esc(d)}</span></div>`).join("")}</div></div>`;
+  h += `<div class="sect"><h2>Plan de emergencia: visitas</h2><div class="princ"><div><b>Si no tuviste tiempo de entrenar</b><span>Antes: 10 minutos de olfato. Al tocar el timbre: correa puesta y búsqueda de premios lejos de la puerta. Durante: Kong congelado en su manta. Saludo solo cuando esté tranquilo, de 3 segundos. Si se desborda, a otra habitación con el Kong, sin reto.</span></div></div></div>`;
+  for(const [k,c] of Object.entries(CATS)){
+    const ids = Object.keys(EX).filter(id=>EX[id].cat===k);
+    h += `<div class="sect"><h2>${c.t}</h2><div class="cards" style="margin-top:0">${ids.map(id=>exCard(id,0,null)).join("")}</div></div>`;
+  }
+  app.innerHTML = h;
+}
+
+function renderProg(){
+  const doneN = Object.keys(S.done).length;
+  let h = topBar() + `<div class="stats">
+    <div><b>${doneN}<small style="font-size:1rem;color:var(--muted)">/${PLAN.length}</small></b><span>Días completos</span></div>
+    <div><b>${Math.round(doneN/PLAN.length*100)}%</b><span>Del programa</span></div>
+    <div><b>${streakNow()}</b><span>Racha actual</span></div>
+    <div><b>${S.xp}</b><span>Huesos</span></div></div>`;
+  h += `<div class="sect"><h2>Objetivos</h2><p>Calificá a ${esc(nm())} una vez por semana, del 1 al 5. Así ves el cambio real.</p><div class="goals">`;
+  GOALS.forEach(g=>{
+    const hist = S.goals[g.id]||[], last = hist[hist.length-1], first = hist[0];
+    const rel = PLAN.map((ids,i)=>ids.some(id=>g.cats.includes(EX[id].cat))?i+1:0).filter(Boolean);
+    const pct = Math.round(rel.filter(isDone).length/rel.length*100);
+    h += `<div class="goalc"><h3>${esc(g.t)}</h3><div class="meta"><span>Entrenamiento ${pct}%</span><span>${first&&hist.length>1?`Empezó en ${first.v}, ahora ${last.v}`:last?`Última nota: ${last.v}`:"Sin calificar"}</span></div>
+      <div class="bar"><i style="width:${pct}%"></i></div>
+      <div class="scale" role="group" aria-label="Calificación de ${esc(g.t)}">${[1,2,3,4,5].map(v=>`<button data-goal="${g.id}" data-v="${v}" aria-pressed="${last?.date===dayKey()&&last.v===v}">${v}</button>`).join("")}</div>
+      <div class="scale-l"><span>${esc(g.lo)}</span><span>${esc(g.hi)}</span></div></div>`;
+  });
+  h += `</div></div>`;
+  const toReview = {};
+  Object.values(S.done).forEach(d=>Object.entries(d.r||{}).forEach(([id,v])=>{ toReview[id]=v; }));
+  const hardOnes = Object.entries(toReview).filter(([,v])=>v==="hard").map(([id])=>id);
+  h += `<div class="sect"><h2>Para repasar</h2>${hardOnes.length?`<div class="review">${hardOnes.map(id=>`<div><span><b>${esc(EX[id].t)}</b><br><small style="color:var(--muted)">${CATS[EX[id].cat].t}</small></span><span class="badge hard">Repasar</span></div>`).join("")}</div>`:`<p class="empty">Cuando marques un desafío como «Le costó», aparecerá acá para que lo repitas.</p>`}</div>`;
+  h += `<div class="sect"><h2>Medallas</h2><div class="medals">${UNITS.map((u,i)=>`<div class="medal ${isDone((i+1)*7)?"on":""}"><i>${i+1}</i>${esc(u.t)}</div>`).join("")}</div></div>`;
+  h += `<div class="sect"><h2>Perfil</h2><form class="goalc" data-form="name2"><label for="dogName"><b>Nombre de tu perro</b></label><div class="row"><input type="text" id="dogName" value="${esc(S.dog)}" maxlength="30" autocomplete="off"><button class="btn" type="submit">Guardar</button></div></form>
+    <div style="margin-top:12px">${view.confirmReset?`<div class="confirm"><b>¿Borrar todo el progreso?</b><span>Se pierden los días, la racha y las notas. No se puede deshacer.</span><div class="row"><button class="btn ghost" data-act="cancelreset">Cancelar</button><button class="btn" style="background:var(--hard)" data-act="doreset">Sí, empezar de cero</button></div></div>`:`<button class="btn ghost wide" data-act="askreset">Reiniciar programa</button>`}</div></div>`;
+  h += `<div class="sect"><h2>Apariencia</h2><div class="seg" role="group" aria-label="Tema">${[["auto","Automático"],["light","Claro"],["dark","Nocturno"]].map(([v,l])=>`<button data-theme-set="${v}" aria-pressed="${theme===v}">${l}</button>`).join("")}</div></div>`;
+  h += `<div class="sect"><h2>Copia de seguridad</h2><p>El progreso se guarda en este navegador. Descargá una copia de vez en cuando por si cambiás de celular o borrás los datos.</p>
+    <div class="row"><button class="btn ghost" data-act="export">Descargar copia</button><label class="btn ghost" for="importFile" tabindex="0">Restaurar copia</label><input type="file" id="importFile" accept="application/json,.json" hidden></div>${view.msg?`<p class="note" role="status">${esc(view.msg)}</p>`:""}</div>`;
+  app.innerHTML = h;
+}
+
+function renderWelcome(){
+  app.innerHTML = `<div class="welcome">
+    <div class="wl-mark">${icon("i-paw")}</div>
+    <h1>Escuela de Patitas</h1>
+    <p class="lead">10 semanas, 3 desafíos cortos por día, con los métodos de los mejores adiestradores del mundo. Unos 15 minutos diarios.</p>
+    <ul class="wl-goals">${[["visitas","Tranquilo cuando llegan visitas"],["llamada","Viene cuando lo llamás"],["perros","Educado con otros perros"],["correa","Pasea sin tirar"],["libertad","Suelto con vos en la playa, el río o la montaña"]].map(([c,t])=>`<li><span class="ic">${icon("c-"+c)}</span>${t}</li>`).join("")}</ul>
+    <form class="wl-form" data-form="name"><label for="dogNameHello">¿Cómo se llama tu perro?</label><input type="text" id="dogNameHello" placeholder="Nombre" maxlength="30" autocomplete="off" required><button class="btn wide" type="submit">Empezar el camino</button></form>
+  </div>`;
+}
+
+function render(){
+  const nav = document.querySelector(".nav");
+  if(!S.dog.trim()){ nav.hidden = true; return renderWelcome(); }
+  nav.hidden = false;
+  document.querySelectorAll(".nav button").forEach(b=>b.setAttribute("aria-current", b.dataset.tab===view.tab && !view.day && !view.celebrate ? "page":"false"));
+  if(view.celebrate) return renderCelebrate();
+  if(view.day) return renderLesson(view.day);
+  ({path:renderPath, lib:renderLib, prog:renderProg})[view.tab]();
+}
+
+/* ---------- Acciones ---------- */
+function completeDay(n){
+  if(isDone(n)) return;
+  const today = dayKey();
+  if(S.last!==today){ S.streak = S.last===yesterday() ? S.streak+1 : 1; S.last = today; }
+  const r = {...(S.wip[n]||{})}, test = n%7===0;
+  const xp = 30 + (test?50:20);
+  S.xp += xp;
+  S.done[n] = {date:today, r};
+  delete S.wip[n];
+  save();
+  view = {...view, day:null, celebrate:{n, test, xp, hard:Object.values(r).filter(v=>v==="hard").length}};
+  window.scrollTo(0,0); render();
+}
+document.addEventListener("click", e=>{
+  const t = e.target.closest("button"); if(!t) return;
+  view.msg = null;
+  if(t.dataset.themeSet) return setTheme(t.dataset.themeSet);
+  if(t.dataset.act==="toggletheme") return setTheme(isDark() ? "light" : "dark");
+  if(t.dataset.tab){ view = {...view, tab:t.dataset.tab, day:null, celebrate:null, confirmReset:false}; window.scrollTo(0,0); return render(); }
+  if(t.dataset.day){ const n=+t.dataset.day; if(!isOpen(n)) return; view = {...view, day:n, celebrate:null}; const first = PLAN[n-1].find(id=>!(S.wip[n]?.[id])) ; if(first && !isDone(n)) view.open[n+"-"+first]=true; window.scrollTo(0,0); return render(); }
+  if(t.dataset.toggle){ view.open[t.dataset.toggle] = !view.open[t.dataset.toggle]; return render(); }
+  if(t.dataset.rate){
+    const n = view.day, id = t.dataset.rate;
+    S.wip[n] = {...(S.wip[n]||{}), [id]:t.dataset.v}; save();
+    view.open[n+"-"+id] = false;
+    const next = PLAN[n-1].find(x=>!S.wip[n][x]); if(next) view.open[n+"-"+next] = true;
+    return render();
+  }
+  if(t.dataset.complete) return completeDay(+t.dataset.complete);
+  if(t.dataset.goal){
+    const g=t.dataset.goal, v=+t.dataset.v, today=dayKey(), hist=[...(S.goals[g]||[])];
+    if(hist.length && hist[hist.length-1].date===today) hist[hist.length-1].v=v; else hist.push({date:today,v});
+    S.goals[g]=hist; save(); return render();
+  }
+  const a = t.dataset.act;
+  if(a==="home"){ view = {...view, tab:"path", day:null, celebrate:null}; window.scrollTo(0,0); return render(); }
+  if(a==="goprog"){ view = {...view, tab:"prog", day:null, celebrate:null}; return render(); }
+  if(a==="export"){
+    const blob = new Blob([JSON.stringify(S,null,1)],{type:"application/json"});
+    const link = document.createElement("a"); link.href = URL.createObjectURL(blob);
+    link.download = "patitas-"+dayKey()+".json"; document.body.appendChild(link); link.click(); link.remove();
+    view.msg = "Copia descargada."; return render();
+  }
+  if(a==="askreset"){ view.confirmReset=true; return render(); }
+  if(a==="cancelreset"){ view.confirmReset=false; return render(); }
+  if(a==="doreset"){ const dog=S.dog; S = structuredClone(DEFAULT); S.dog=dog; view.confirmReset=false; save(); return render(); }
+});
+document.addEventListener("change", async e=>{
+  if(e.target.id!=="importFile" || !e.target.files[0]) return;
+  try{
+    const data = JSON.parse(await e.target.files[0].text());
+    if(!data || typeof data.done!=="object") throw 0;
+    S = Object.assign(structuredClone(DEFAULT), data); save();
+    view.msg = "Copia restaurada.";
+  }catch(err){ view.msg = "Ese archivo no es una copia de Escuela de Patitas."; }
+  render();
+});
+document.addEventListener("keydown", e=>{ if(e.key==="Enter" && e.target.matches("label[for=importFile]")) document.getElementById("importFile").click(); });
+document.addEventListener("submit", e=>{
+  e.preventDefault();
+  const input = e.target.querySelector("input"); if(!input) return;
+  const v = input.value.trim().slice(0,30); if(!v){ input.focus(); return; }
+  S.dog = v; save(); view = {...view, tab:"path", day:null, celebrate:null}; window.scrollTo(0,0); render();
+});
+render();
+</script>
+
+</body>
+</html>
